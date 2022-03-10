@@ -9,7 +9,7 @@ namespace PlugInChipsMod.Scripts
         public static T instance { get; private set; }
         public CustomItem()
         {
-            if (instance != null) throw new InvalidOperationException("Singleton class \"" + typeof(T).Name + "\" inheriting ItemBase was instantiated twice");
+            if (instance != null) throw new InvalidOperationException("Singleton class \"" + typeof(T).Name + "\" inheriting CustomItem was instantiated twice");
             instance = this as T;
         }
     }
