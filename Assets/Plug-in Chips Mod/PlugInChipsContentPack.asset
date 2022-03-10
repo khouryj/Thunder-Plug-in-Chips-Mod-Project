@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -281164913, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+  m_Name: PlugInChipsContentPack
+  m_EditorClassIdentifier: 
+  bodyPrefabs: []
+  masterPrefabs: []
+  projectilePrefabs: []
+  gameModePrefabs: []
+  networkedObjectPrefabs: []
+  skillDefs: []
+  skillFamilies: []
+  sceneDefs: []
+  itemDefs:
+  - {fileID: 11400000, guid: bd0c929aa044f1d4fae4f7578560960c, type: 2}
+  - {fileID: 11400000, guid: 54532d16f363e974cb8545c06092bc3f, type: 2}
+  equipmentDefs:
+  - {fileID: 11400000, guid: 8d8d153baf9627043b5f97e1ef119eed, type: 2}
+  - {fileID: 11400000, guid: 03c4b64f3982813499c037169ab52521, type: 2}
+  buffDefs:
+  - {fileID: 11400000, guid: 962283bf5c3d4e24382e8b91e194b6be, type: 2}
+  - {fileID: 11400000, guid: 05ccbf47f4a312347b1d72069ff24377, type: 2}
+  - {fileID: 11400000, guid: a299822747a0e4c479ff385d748299a3, type: 2}
+  - {fileID: 11400000, guid: 6f74cd0be0e182347a0474ca8d11ccd0, type: 2}
+  - {fileID: 11400000, guid: 070073bf472e9cb45b6fe4c27f27fe94, type: 2}
+  eliteDefs: []
+  unlockableDefs: []
+  survivorDefs: []
+  artifactDefs: []
+  effectDefs: []
+  surfaceDefs: []
+  networkSoundEventDefs: []
+  musicTrackDefs: []
+  gameEndingDefs: []
+  entityStateConfigurations: []
+  entityStateTypes: []

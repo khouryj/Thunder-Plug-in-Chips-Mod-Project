@@ -1,0 +1,15 @@
+Assets/PublicizedLib/*
+Assets/Scenes/*
+Assets/shaders/*
+Assets/ThunderKitSettings/*
+Assets/PublicizedLib.meta
+Assets/Scenes.meta
+Assets/shaders.meta
+Assets/ThunderKitSettings.meta
+Library/*
+Logs/*
+obj/*
+Packages/*
+ProjectSettings/*
+Temp/*
+ThunderKit/*

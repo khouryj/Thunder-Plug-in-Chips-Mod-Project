@@ -1,0 +1,23 @@
+{
+    "name": "PlugInChipsMod",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "Assembly-CSharp.dll",
+        "BepInEx.dll",
+        "PublicizedRoR2.dll",
+        "R2API.dll",
+        "LegacyResourcesAPI.dll",
+        "BepInEx.MonoMod.HookGenPatcher.dll",
+        "com.unity.multiplayer-hlapi.Runtime.dll",
+        "MMHOOK_Assembly-CSharp.dll",
+        "HGCSharpUtils.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

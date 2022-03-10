@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1512808244, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+  m_Name: TheBlackFlower
+  m_EditorClassIdentifier: 
+  pickupModelPrefab: {fileID: 4650829153658912185, guid: 5e456d1d83855fa4cb2d18e3499ddf06,
+    type: 3}
+  cooldown: 90
+  nameToken: EQUIPMENT_THE_BLACK_FLOWER_NAME
+  pickupToken: EQUIPMENT_THE_BLACK_FLOWER_PICKUP
+  descriptionToken: EQUIPMENT_THE_BLACK_FLOWER_DESC
+  loreToken: EQUIPMENT_THE_BLACK_FLOWER_LORE
+  pickupIconSprite: {fileID: 21300000, guid: 719ff385f9f84164cb663053ce8c5058, type: 3}
+  unlockableDef: {fileID: 0}
+  colorIndex: 4
+  canDrop: 0
+  dropOnDeathChance: 0
+  canBeRandomlyTriggered: 1
+  enigmaCompatible: 0
+  isLunar: 1
+  isBoss: 0
+  passiveBuffDef: {fileID: 0}
+  appearsInSinglePlayer: 1
+  appearsInMultiPlayer: 1
+  requiredExpansion: {fileID: 0}
+  mageElement: 0

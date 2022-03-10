@@ -1,0 +1,21 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "b11f5d03-942e-2142-383b-e5480ae11317": {
+      "ProjectGuid": "b11f5d03-942e-2142-383b-e5480ae11317",
+      "DisplayName": "PlugInChipsReferences",
+      "ColorIndex": 0
+    },
+    "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3": {
+      "ProjectGuid": "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3",
+      "DisplayName": "Miscellaneous Files",
+      "ColorIndex": -1
+    },
+    "1f91bc7c-9a06-a43b-ff2b-acdf0411e58f": {
+      "ProjectGuid": "1f91bc7c-9a06-a43b-ff2b-acdf0411e58f",
+      "DisplayName": "PlugInChipsMod",
+      "ColorIndex": 1
+    }
+  },
+  "NextColorIndex": 2
+}
