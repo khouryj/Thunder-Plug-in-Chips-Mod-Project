@@ -14,24 +14,15 @@ namespace PlugInChipsMod.Scripts
         public override string Desc => "60% chance of increasing <style=cIsDamage>base damage by 10%</style>, <style=cIsUtility>armor by 20, and movement speed by 10%.</style> for the rest of the stage. <style=cWorldEvent>40% chance of spawning in a doppelganger.</style> <style=cDeath>Dying with this equipment spawns a doppelganger.</style>";
         public override string Lore => "The Black Flower, created by the gods to destroy the world as we know it.\nIt is said that the flower slowly corrupts its wielder, causing their eyes to turn red and go crazy trying to destroy humanity.\nBe on the lookout for copies of yourself, they are sure to cause the world's destruction.\n<style=cIsHealth>You never know when the red eye disease will spread to you.</style>";
 
-        private EquipmentDef blackFlower;
         public BuffDef Possessed;
 
         public override void Init(ConfigFile config)
         {
-            blackFlower = serializeableContentPack.equipmentDefs[0];
+            base.equipmentDef = serializeableContentPack.equipmentDefs[0];
             Possessed = serializeableContentPack.buffDefs[1];
 
             SetupLanguage();
             SetupHooks();
-        }
-
-        protected override void SetupLanguage()
-        {
-            LanguageAPI.Add(blackFlower.nameToken, Name);
-            LanguageAPI.Add(blackFlower.pickupToken, Pickup);
-            LanguageAPI.Add(blackFlower.descriptionToken, Desc);
-            LanguageAPI.Add(blackFlower.loreToken, Lore);
         }
 
         protected override void SetupHooks()
@@ -46,7 +37,7 @@ namespace PlugInChipsMod.Scripts
             {
 
                 var slot = damageReport.victim.body;
-                if (slot?.equipmentSlot.equipmentIndex == blackFlower.equipmentIndex)
+                if (slot?.equipmentSlot.equipmentIndex == base.equipmentDef.equipmentIndex)
                 {
                     ulong ul = (ulong)new System.Random().Next();
                     DoppelgangerInvasionManager.CreateDoppelganger(slot.master, new Xoroshiro128Plus(ul));
@@ -57,7 +48,7 @@ namespace PlugInChipsMod.Scripts
 
         private bool CheckEquipment(On.RoR2.EquipmentSlot.orig_PerformEquipmentAction orig, EquipmentSlot self, EquipmentDef equipmentDef)
         {
-            if (equipmentDef == blackFlower) { return UseEquipment(self); }
+            if (equipmentDef == base.equipmentDef) { return UseEquipment(self); }
             return orig(self, equipmentDef);
         }
 

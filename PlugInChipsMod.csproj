@@ -64,6 +64,9 @@
      <Compile Include="Assets\Plug-in Chips Mod\Scripts\Items\AntiChainDamage.cs" />
      <Compile Include="Assets\Plug-in Chips Mod\Scripts\Items\CustomItem.cs" />
      <Compile Include="Assets\Plug-in Chips Mod\Scripts\Items\DeadlyHeal.cs" />
+     <Compile Include="Assets\Plug-in Chips Mod\Scripts\Items\OffensiveHeal.cs" />
+     <Compile Include="Assets\Plug-in Chips Mod\Scripts\Items\Shockwave.cs" />
+     <Compile Include="Assets\Plug-in Chips Mod\Scripts\Items\TauntUp.cs" />
      <Compile Include="Assets\Plug-in Chips Mod\Scripts\Utils\DoppelgangerAllySpawnCard.cs" />
      <None Include="Assets\Plug-in Chips Mod\PlugInChipsMod.asmdef" />
  <Reference Include="UnityEngine">

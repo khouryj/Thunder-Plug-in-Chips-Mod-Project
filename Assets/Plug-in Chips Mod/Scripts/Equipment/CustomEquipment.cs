@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BepInEx.Configuration;
+using RoR2;
+using R2API;
 
 namespace PlugInChipsMod.Scripts
 {
@@ -24,11 +26,19 @@ namespace PlugInChipsMod.Scripts
         public abstract string Desc { get; }
         public abstract string Lore { get; }
 
+        public EquipmentDef equipmentDef;
+
         public abstract void Init(ConfigFile config);
 
         protected virtual void SetupConfig(ConfigFile config) { }
 
-        protected abstract void SetupLanguage();
+        protected virtual void SetupLanguage()
+        {
+            LanguageAPI.Add(equipmentDef.nameToken, Name);
+            LanguageAPI.Add(equipmentDef.pickupToken, Pickup);
+            LanguageAPI.Add(equipmentDef.descriptionToken, Desc);
+            LanguageAPI.Add(equipmentDef.loreToken, Lore);
+        }
 
         protected virtual void SetupHooks() { }
     }

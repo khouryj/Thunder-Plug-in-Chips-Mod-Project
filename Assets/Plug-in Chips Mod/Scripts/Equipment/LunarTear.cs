@@ -12,14 +12,13 @@ namespace PlugInChipsMod.Scripts
         public override string Pickup => "<style=cWorldEvent>It's like I'm carrying the weight of the world.</style>";
         public override string Desc => "<style=cWorldEvent>70% chance to spawn in a friendly doppelganger.</style> <style=cDeath>30% chance to lower stats.</style> <style=cIsUtility>Buffs allies when you are killed.</style>";
         public override string Lore => "The Lunar Tear - Legendary flower of almost perfect beauty.\nThis flower is said to be the opposite of the black flower.\nThe flower seems to have a will of its own, and wishes to assist its wielder.";
-
-        private EquipmentDef lunarTear;
+        
         public BuffDef Inspired;
         public BuffDef Weakened;
 
         public override void Init(ConfigFile config)
         {
-            lunarTear = serializeableContentPack.equipmentDefs[1];
+            base.equipmentDef = serializeableContentPack.equipmentDefs[1];
             Inspired = serializeableContentPack.buffDefs[0];
             Weakened = serializeableContentPack.buffDefs[3];
 
@@ -38,7 +37,7 @@ namespace PlugInChipsMod.Scripts
             if (damageReport.victim && damageReport.victim.body)
             {
                 var playerbody = damageReport.victim.body;
-                if (playerbody.equipmentSlot.equipmentIndex == lunarTear.equipmentIndex)
+                if (playerbody.equipmentSlot.equipmentIndex == base.equipmentDef.equipmentIndex)
                 {
 
                     for (int index = CharacterMaster.readOnlyInstancesList.Count - 1; index >= 0; --index)
@@ -62,17 +61,9 @@ namespace PlugInChipsMod.Scripts
             orig(self, damageReport, victimNetworkUser);
         }
 
-        protected override void SetupLanguage()
-        {
-            LanguageAPI.Add(lunarTear.nameToken, Name);
-            LanguageAPI.Add(lunarTear.pickupToken, Pickup);
-            LanguageAPI.Add(lunarTear.descriptionToken, Desc);
-            LanguageAPI.Add(lunarTear.loreToken, Lore);
-        }
-
         private bool CheckEquipment(On.RoR2.EquipmentSlot.orig_PerformEquipmentAction orig, EquipmentSlot self, EquipmentDef equipmentDef)
         {
-            if (equipmentDef == lunarTear) { return UseEquipment(self); }
+            if (equipmentDef == base.equipmentDef) { return UseEquipment(self); }
             return orig(self, equipmentDef);
         }
 

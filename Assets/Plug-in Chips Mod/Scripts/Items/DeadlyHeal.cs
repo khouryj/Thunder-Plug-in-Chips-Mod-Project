@@ -16,11 +16,9 @@ namespace PlugInChipsMod.Scripts
         public ConfigEntry<float> BaseHealingAmount;
         public ConfigEntry<float> BaseHealingAmountIncrements;
 
-        private ItemDef deadlyHeal;
-
         public override void Init(ConfigFile config)
         {
-            deadlyHeal = serializeableContentPack.itemDefs[1];
+            base.itemDef = serializeableContentPack.itemDefs[1];
 
             PlugInChips.instance.Logger.LogMessage("Initializing Deadly Heal");
             SetupConfig(config);
@@ -34,15 +32,6 @@ namespace PlugInChipsMod.Scripts
             BaseHealingAmountIncrements = config.Bind<float>("Item: " + Name, "Base Healing Amount Increments", 5f, "How much should the percentage rise per stack?");
         }
 
-        protected override void SetupLanguage()
-        {
-            PlugInChips.instance.Logger.LogMessage("Making tokens");
-            LanguageAPI.Add(deadlyHeal.nameToken, Name);
-            LanguageAPI.Add(deadlyHeal.pickupToken, Pickup);
-            LanguageAPI.Add(deadlyHeal.descriptionToken, Desc);
-            LanguageAPI.Add(deadlyHeal.loreToken, Lore);
-        }
-
         protected override void SetupHooks()
         {
             PlugInChips.instance.Logger.LogMessage("Hooking");
@@ -53,7 +42,7 @@ namespace PlugInChipsMod.Scripts
         {
             if (damageReport?.attackerBody)
             {
-                var inventoryCount = damageReport.attackerBody.inventory.GetItemCount(deadlyHeal);
+                var inventoryCount = damageReport.attackerBody.inventory.GetItemCount(base.itemDef);
                 float stackIncrease = BaseHealingAmountIncrements.Value / 100;
                 float healingPercent = BaseHealingAmount.Value / 100;
                 if (inventoryCount == 1)

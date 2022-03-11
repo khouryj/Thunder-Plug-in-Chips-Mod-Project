@@ -14,7 +14,6 @@ namespace PlugInChipsMod.Scripts
                                + $"<style=cStack>{"+" + InvulnerabilityTimeIncrements.Value + " second(s) per stack"}</style>";
         public override string Lore => "This plug-in chip assisted many units in surviving against barrages of attacks from enemies.";
 
-        private ItemDef antiChain;
         private BuffDef hiddenCooldown;
 
         private ConfigEntry<float> BaseInvulnerabilityTime;
@@ -22,7 +21,7 @@ namespace PlugInChipsMod.Scripts
 
         public override void Init(ConfigFile config)
         {
-            antiChain = serializeableContentPack.itemDefs[0];
+            base.itemDef = serializeableContentPack.itemDefs[0];
             hiddenCooldown = serializeableContentPack.buffDefs[4];
 
             PlugInChips.instance.Logger.LogMessage("Initializing Anti-Chain Damage");
@@ -38,15 +37,6 @@ namespace PlugInChipsMod.Scripts
             InvulnerabilityTimeIncrements = config.Bind<float>("Item: " + Name, "Invulnerability Time Increments", .5f, "How much time should invulnerability increase per stack?");
         }
 
-        protected override void SetupLanguage()
-        {
-            PlugInChips.instance.Logger.LogMessage("Making tokens");
-            LanguageAPI.Add(antiChain.nameToken, Name);
-            LanguageAPI.Add(antiChain.pickupToken, Pickup);
-            LanguageAPI.Add(antiChain.descriptionToken, Desc);
-            LanguageAPI.Add(antiChain.loreToken, Lore);
-        }
-
         protected override void SetupHooks()
         {
             On.RoR2.CharacterBody.OnTakeDamageServer += Invulnerability;
@@ -54,25 +44,19 @@ namespace PlugInChipsMod.Scripts
 
         private void Invulnerability(On.RoR2.CharacterBody.orig_OnTakeDamageServer orig, CharacterBody self, DamageReport damageReport)
         {
-            var inventoryCount = self.inventory.GetItemCount(antiChain);
+            var inventoryCount = self.inventory.GetItemCount(base.itemDef);
             if (inventoryCount == 1 && !self.HasBuff(RoR2Content.Buffs.Immune) && !self.HasBuff(hiddenCooldown))
             {
                 if (!damageReport.isFallDamage)
                 {
                     self.AddTimedBuffAuthority(RoR2Content.Buffs.Immune.buffIndex, BaseInvulnerabilityTime.Value);
-                    if (self?.teamComponent.teamIndex != TeamIndex.Player)
-                    {
-                        self.AddTimedBuff(hiddenCooldown, 5f);
-                    }
+                    self.AddTimedBuff(hiddenCooldown, BaseInvulnerabilityTime.Value + 3f);
                 }
             }
             else if (inventoryCount >= 2 && !damageReport.isFallDamage && !self.HasBuff(RoR2Content.Buffs.Immune) && !self.HasBuff(hiddenCooldown))
             {
                 self.AddTimedBuffAuthority(RoR2Content.Buffs.Immune.buffIndex, BaseInvulnerabilityTime.Value + (InvulnerabilityTimeIncrements.Value * inventoryCount) - InvulnerabilityTimeIncrements.Value);
-                if (self?.teamComponent.teamIndex != TeamIndex.Player)
-                {
-                    self.AddTimedBuff(hiddenCooldown, 5f);
-                }
+                self.AddTimedBuff(hiddenCooldown, BaseInvulnerabilityTime.Value + (InvulnerabilityTimeIncrements.Value * inventoryCount) - InvulnerabilityTimeIncrements.Value + 3f);
             }
             orig(self, damageReport);
         }
