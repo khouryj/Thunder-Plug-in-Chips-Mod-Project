@@ -22,16 +22,14 @@ namespace PlugInChipsMod.Scripts
         public ConfigEntry<float> BaseDamageIncrements;
 
         private static GameObject shockwaveProjectile;
-        private GameObject model;
 
         public override void Init(ConfigFile config)
         {
             base.itemDef = serializeableContentPack.itemDefs[3];
-            model = assetBundle.LoadAsset<GameObject>("shockwaveProjectile.prefab");
+            shockwaveProjectile = Projectiles.shockwaveProjectile;
 
             SetupConfig(config);
             SetupLanguage();
-            CreateProjectile();
             SetupHooks();
         }
 
@@ -39,20 +37,6 @@ namespace PlugInChipsMod.Scripts
         {
             BaseDamage = config.Bind<float>("Item: " + Name, "Base Damage", 50f, "What percent of the character's base damage should the base shockwave damage be?");
             BaseDamageIncrements = config.Bind<float>("Item: " + Name, "Base Damage Increments", 20f, "How much should the percentage increase per stack?");
-        }
-
-        private void CreateProjectile()
-        {
-            shockwaveProjectile = PrefabAPI.InstantiateClone(LegacyResourcesAPI.Load<GameObject>("prefabs/projectiles/FMJ"), "ShockwaveProjectile", true);
-
-            model.AddComponent<NetworkIdentity>();
-            model.AddComponent<ProjectileGhostController>();
-
-            var projectileController = shockwaveProjectile.GetComponent<ProjectileController>();
-            projectileController.ghostPrefab = model;
-
-            PrefabAPI.RegisterNetworkPrefab(shockwaveProjectile);
-            ContentAddition.AddProjectile(shockwaveProjectile);
         }
 
         protected override void SetupHooks()

@@ -9,8 +9,6 @@ using System.Reflection;
 using System;
 using System.Linq;
 using PlugInChipsMod.Scripts;
-using ChipsItem = PlugInChipsMod.Scripts.CustomItem;
-using ChipsEquipment = PlugInChipsMod.Scripts.CustomEquipment;
 using Path = System.IO.Path;
 using RoR2;
 using SearchableAttribute = HG.Reflection.SearchableAttribute;
@@ -21,19 +19,18 @@ namespace PlugInChipsMod
     [BepInPlugin(MODGUID, MODNAME, MODVERSION)]
     [BepInDependency(R2API.R2API.PluginGUID, R2API.R2API.PluginVersion)]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
-    [R2APISubmoduleDependency(nameof(ItemAPI), nameof(LanguageAPI), nameof(PrefabAPI))]
+    [R2APISubmoduleDependency(nameof(LanguageAPI), nameof(PrefabAPI))]
     public class PlugInChips : BaseUnityPlugin
     {
         public const string MODNAME = "Plug-In Chips Mod";
         public const string MODVERSION = "1.0.0";
         public const string MODGUID = "com.RumblingJOSEPH.PlugInChipsMod";
 
-        public static AssetBundle assetBundle;
-        public static SerializableContentPack serializeableContentPack;
-        private static ContentPack contentPack;
+        public static AssetBundle assetBundle = null;
+        public static SerializableContentPack serializeableContentPack = null;
+        private static ContentPack contentPack = null;
 
         private bool load = true;
-        public bool contentpackLoaded = false;
         public static PlugInChips instance;
 
         public static Dictionary<string, string> ShaderLookup = new Dictionary<string, string>()
@@ -54,10 +51,12 @@ namespace PlugInChipsMod
             Logger = base.Logger;
 
             LoadAssetBundle();
-            if (!load) { Logger.LogMessage("Failed to load in assetbundle, check file name/path."); }
+            if (!load) { Logger.LogMessage("Failed to load in assetbundle, check file name/path."); return; }
 
+            Projectiles.Init();
             Buffs.Init();
 
+            ContentPackProvider.Init(); //i hecking love content packs
             SearchableAttribute.ScanAssembly(Assembly.GetExecutingAssembly());
         }
 
