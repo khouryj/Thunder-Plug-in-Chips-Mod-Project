@@ -13,7 +13,9 @@ using ChipsItem = PlugInChipsMod.Scripts.CustomItem;
 using ChipsEquipment = PlugInChipsMod.Scripts.CustomEquipment;
 using Path = System.IO.Path;
 using RoR2;
+using SearchableAttribute = HG.Reflection.SearchableAttribute;
 
+[assembly: SearchableAttribute.OptIn]
 namespace PlugInChipsMod
 {
     [BepInPlugin(MODGUID, MODNAME, MODVERSION)]
@@ -31,6 +33,7 @@ namespace PlugInChipsMod
         private static ContentPack contentPack;
 
         private bool load = true;
+        public bool contentpackLoaded = false;
         public static PlugInChips instance;
 
         public static Dictionary<string, string> ShaderLookup = new Dictionary<string, string>()
@@ -55,21 +58,7 @@ namespace PlugInChipsMod
 
             Buffs.Init();
 
-            var Items = Assembly.GetExecutingAssembly().GetTypes().Where(type => !type.IsAbstract && type.IsSubclassOf(typeof(ChipsItem)));
-            foreach (var item in Items)
-            {
-                ChipsItem chipsItem = (ChipsItem)Activator.CreateInstance(item);
-                Logger.LogMessage("Initializing item...");
-                chipsItem.Init(Config);
-            }
-
-            var Equipment = Assembly.GetExecutingAssembly().GetTypes().Where(type => !type.IsAbstract && type.IsSubclassOf(typeof(ChipsEquipment)));
-            foreach (var equipment in Equipment)
-            {
-                ChipsEquipment equip = (ChipsEquipment)Activator.CreateInstance(equipment);
-                Logger.LogMessage("Initializing Equipment...");
-                equip.Init(Config);
-            }
+            SearchableAttribute.ScanAssembly(Assembly.GetExecutingAssembly());
         }
 
         private void LoadAssetBundle()

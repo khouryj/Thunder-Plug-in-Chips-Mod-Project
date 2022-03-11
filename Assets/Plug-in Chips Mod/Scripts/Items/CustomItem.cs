@@ -3,6 +3,9 @@ using System;
 using RoR2;
 using R2API;
 using UnityEngine;
+using System.Reflection;
+using System.Linq;
+using PlugInChipsMod;
 
 namespace PlugInChipsMod.Scripts
 {
@@ -38,5 +41,17 @@ namespace PlugInChipsMod.Scripts
         }
 
         protected virtual void SetupHooks() { }
+
+        [SystemInitializer(typeof(ItemCatalog))]
+        public static void InitializeItems()
+        {
+            var Items = Assembly.GetExecutingAssembly().GetTypes().Where(type => !type.IsAbstract && type.IsSubclassOf(typeof(CustomItem)));
+            foreach (var item in Items)
+            {
+                CustomItem chipsItem = (CustomItem)Activator.CreateInstance(item);
+                PlugInChips.instance.Logger.LogMessage("Initializing Items...");
+                chipsItem.Init(PlugInChips.instance.Config);
+            }
+        }
     }
 }
