@@ -30,7 +30,7 @@ namespace PlugInChipsMod.Scripts
 
         protected override void SetupConfig(ConfigFile config)
         {
-            BaseHealingAmount = config.Bind<float>("Item: " + Name, "Base Healing Amount", 20f, "What percent should the base healing amount be?");
+            BaseHealingAmount = config.Bind<float>("Item: " + Name, "Base Healing Amount", 10f, "What percent should the base healing amount be?");
             BaseHealingAmountIncrements = config.Bind<float>("Item: " + Name, "Base Healing Amount Increments", 5f, "How much should the percentage rise per stack?");
         }
 

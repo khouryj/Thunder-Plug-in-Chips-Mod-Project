@@ -9,6 +9,7 @@ using static PlugInChipsMod.PlugInChips;
 using HarmonyLib;
 using RoR2.Items;
 using System;
+using RoR2.Projectile;
 
 namespace PlugInChipsMod.Scripts
 {
@@ -21,8 +22,8 @@ namespace PlugInChipsMod.Scripts
 
         public override string Name => "OS Chip";
         public override string Pickup => "The combined power of all plug-in chips. <style=cIsVoid>Corrupts all plug-in chips.</style>";
-        public override string Desc => "test";
-        public override string Lore => "The core chip of any unit.\n <style=cisHealth>Note: Removal of this chip means total malfunction of unit. Do not remove under any circumstances.</style>";
+        public override string Desc => "This chip will apply two randomly selected <style=cIsUtility>SUPERCHARGED</style> effects of the other plugin chips for <style=cIsUtility>30 seconds</style>, then cooldown for <style=cIsUtility>15 seconds</style>. <style=cIsVoid>Corrupts all plug-in chips</style>";
+        public override string Lore => "The core chip of any unit.\n <style=cIsHealth>Note: Removal of this chip means total malfunction of unit. Do not remove under any circumstances.</style>";
         public override bool dlcRequired => true;
 
         private static ItemDef.Pair[] conversions;
@@ -49,6 +50,8 @@ namespace PlugInChipsMod.Scripts
             itemDef = Utilities.osChip;
             ItemCount = 0;
             prevItemCount = 0;
+            cooldownTime = 15f;
+            buffTime = 30f;
             ActiveBuff1 = null;
             ActiveBuff2 = null;
             cb = null;
@@ -62,6 +65,117 @@ namespace PlugInChipsMod.Scripts
         {
             Inventory.onInventoryChangedGlobal += new Action<Inventory>(Removal);
             RoR2Application.onFixedUpdate += RoR2Application_onFixedUpdate;
+            GlobalEventManager.onCharacterDeathGlobal += new Action<DamageReport>(superDeadlyHeal);
+            On.RoR2.HealthComponent.TakeDamage += superTaunt;
+            On.RoR2.GlobalEventManager.OnHitEnemy += superOffensive;
+            On.RoR2.CharacterBody.OnTakeDamageServer += superAntiChain;
+            On.RoR2.CharacterBody.OnSkillActivated += superShockwave;
+        }
+
+        private void superShockwave(On.RoR2.CharacterBody.orig_OnSkillActivated orig, CharacterBody self, GenericSkill skill)
+        {
+            if (self.HasBuff(SuperShockwave))
+            {
+                var inventoryCount = self.inventory.GetItemCount(itemDef);
+                if (inventoryCount > 0)
+                {
+                    if (skill.skillFamily == self.GetComponent<SkillLocator>().primary.skillFamily)
+                    {
+                        FireProjectileInfo fireProjectileInfo = new FireProjectileInfo()
+                        {
+                            owner = self.gameObject,
+                            damage = self.baseDamage * (2f + (.5f * (inventoryCount - 1))),
+                            position = self.corePosition,
+                            rotation = Util.QuaternionSafeLookRotation(self.inputBank.aimDirection),
+                            crit = false,
+                            projectilePrefab = Projectiles.shockwaveProjectile
+                        };
+                        ProjectileManager.instance.FireProjectile(fireProjectileInfo);
+                    }
+                }
+            }
+            orig(self, skill);
+        }
+
+        private void superAntiChain(On.RoR2.CharacterBody.orig_OnTakeDamageServer orig, CharacterBody self, DamageReport damageReport)
+        {
+            if (self.HasBuff(SuperAntiChain))
+            {
+                var inventoryCount = self.inventory.GetItemCount(itemDef);
+                if (inventoryCount > 0 && !self.HasBuff(RoR2Content.Buffs.Immune))
+                {
+                    if (!damageReport.isFallDamage)
+                    {
+                        self.AddTimedBuff(RoR2Content.Buffs.Immune, 3f + (.01f * (inventoryCount - 1)));
+                    }
+                }
+            }
+            orig(self, damageReport);
+        }
+
+        private void superOffensive(On.RoR2.GlobalEventManager.orig_OnHitEnemy orig, GlobalEventManager self, DamageInfo damageInfo, GameObject victim)
+        {
+            if (victim && damageInfo.attacker)
+            {
+                CharacterBody attackerBody = damageInfo.attacker.GetComponent<CharacterBody>();
+                if (attackerBody && attackerBody.HasBuff(SuperOffensiveHeal))
+                {
+                    var inventoryCount = attackerBody.inventory.GetItemCount(itemDef);
+                    if (inventoryCount > 0)
+                    {
+                        attackerBody.healthComponent.Heal(damageInfo.damage * (.20f + (.05f * (inventoryCount - 1))), default(ProcChainMask));
+                    }
+                }
+            }
+            orig(self, damageInfo, victim);
+        }
+
+        private void superTaunt(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
+        {
+            if (damageInfo?.attacker)
+            {
+                int inventoryCount = 0;
+                CharacterBody victimbody;
+                CharacterBody attackerbody;
+                try
+                {
+                    victimbody = self.GetComponent<CharacterBody>();
+                    attackerbody = damageInfo.attacker.GetComponent<CharacterBody>();
+                    inventoryCount = attackerbody.inventory.GetItemCount(itemDef);
+                }
+                catch (NullReferenceException)
+                {
+                    orig(self, damageInfo);
+                    return;
+                }
+                if (attackerbody.HasBuff(SuperTaunt))
+                {
+                    if (inventoryCount > 0 && !victimbody.HasBuff(Taunted) && victimbody != attackerbody)
+                    {
+                        victimbody.AddBuff(Taunted);
+                    }
+                    else if (inventoryCount > 0 && victimbody.HasBuff(Taunted))
+                    {
+                        damageInfo.damage *= 3f + (.25f * (inventoryCount - 1));
+                    }
+                }
+                orig(self, damageInfo);
+            }
+        }
+
+        private void superDeadlyHeal(DamageReport obj)
+        {
+            if (obj?.attackerBody)
+            {
+                if (obj.attackerBody.HasBuff(SuperDeadlyHeal))
+                {
+                    var inventoryCount = obj.attackerBody.inventory.GetItemCount(itemDef);
+                    if (inventoryCount > 0)
+                    {
+                        obj.attackerBody.healthComponent.HealFraction(.3f + (.06f * (inventoryCount - 1)), default(ProcChainMask));
+                    }
+                }
+            }
         }
 
         private void RoR2Application_onFixedUpdate()
@@ -103,7 +217,7 @@ namespace PlugInChipsMod.Scripts
                         di.damage = hc.health * (new System.Random().Next(1, 45) / 100);
                         if (hc.body.teamComponent.teamIndex != TeamIndex.Monster)
                         {
-                            Chat.AddMessage("<style=cisHealth>WARNING: REMOVAL OF THIS CHIP HAS DAMAGED UNIT, SEEK MAINTENANCE IMMEDIATELY");
+                            Chat.AddMessage("<style=cIsHealth>WARNING: REMOVAL OF THIS CHIP HAS DAMAGED UNIT, SEEK MAINTENANCE IMMEDIATELY!</style>");
                             hc.TakeDamage(di);
                         }
                     }
@@ -131,28 +245,28 @@ namespace PlugInChipsMod.Scripts
             conversions = new ItemDef.Pair[5];
             conversions[0] = new ItemDef.Pair
             {
-                itemDef1 = Utilities.deadlyHeal,
-                itemDef2 = Utilities.osChip
+                itemDef1 = deadlyHeal,
+                itemDef2 = osChip
             };
             conversions[1] = new ItemDef.Pair
             {
-                itemDef1 = Utilities.shockwave,
-                itemDef2 = Utilities.osChip
+                itemDef1 = shockwave,
+                itemDef2 = osChip
             };
             conversions[2] = new ItemDef.Pair
             {
-                itemDef1 = Utilities.antiChainDamage,
-                itemDef2 = Utilities.osChip
+                itemDef1 = antiChainDamage,
+                itemDef2 = osChip
             };
             conversions[3] = new ItemDef.Pair
             {
-                itemDef1 = Utilities.offensiveHeal,
-                itemDef2 = Utilities.osChip
+                itemDef1 = offensiveHeal,
+                itemDef2 = osChip
             };
             conversions[4] = new ItemDef.Pair
             {
-                itemDef1 = Utilities.tauntUp,
-                itemDef2 = Utilities.osChip
+                itemDef1 = tauntUp,
+                itemDef2 = osChip
             };
 
             Utilities.InitializeCorruptedItem(conversions);

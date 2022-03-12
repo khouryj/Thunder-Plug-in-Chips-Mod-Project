@@ -23,6 +23,7 @@ namespace PlugInChipsMod.Scripts
         public static BuffDef SuperAntiChain;
         public static BuffDef SuperShockwave;
         public static BuffDef cooldown;
+        public static BuffDef Taunted;
 
         public static void Init()
         {
@@ -32,13 +33,19 @@ namespace PlugInChipsMod.Scripts
             antiChainDamage = serializeableContentPack.itemDefs[0];
             shockwave = serializeableContentPack.itemDefs[3];
             osChip = serializeableContentPack.itemDefs[5];
-            PlugInChips.instance.Logger.LogMessage(osChip.nameToken);
+
+            Taunted = serializeableContentPack.buffDefs[2];
+            SuperTaunt = serializeableContentPack.buffDefs[5];
+            SuperDeadlyHeal = serializeableContentPack.buffDefs[6];
+            SuperOffensiveHeal = serializeableContentPack.buffDefs[7];
+            SuperAntiChain = serializeableContentPack.buffDefs[8];
+            SuperShockwave = serializeableContentPack.buffDefs[9];
+            cooldown = serializeableContentPack.buffDefs[10];
         }
 
         public static void InitializeCorruptedItem(ItemDef.Pair[] pairs)
         {
             ItemCatalog.itemRelationships[DLC1Content.ItemRelationshipTypes.ContagiousItem] = ItemCatalog.itemRelationships[DLC1Content.ItemRelationshipTypes.ContagiousItem].AddRangeToArray(pairs);
-            PlugInChips.instance.Logger.LogMessage("Created corrupted item");
         }
     }
 }

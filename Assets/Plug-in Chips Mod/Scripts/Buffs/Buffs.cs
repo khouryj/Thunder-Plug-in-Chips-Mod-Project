@@ -16,6 +16,12 @@ namespace PlugInChipsMod.Scripts
             serializeableContentPack.buffDefs[2].name = "Taunted";
             serializeableContentPack.buffDefs[3].name = "Weakened";
             serializeableContentPack.buffDefs[4].name = "antiChainCooldown";
+            serializeableContentPack.buffDefs[5].name = "SUPERCHARGED Taunt";
+            serializeableContentPack.buffDefs[6].name = "SUPERCHARGED Deadly Heal";
+            serializeableContentPack.buffDefs[7].name = "SUPERCHARGED Offensive Heal";
+            serializeableContentPack.buffDefs[8].name = "SUPERCHARGED Anti-Chain Damage";
+            serializeableContentPack.buffDefs[9].name = "SUPERCHARGED Shockwave";
+            serializeableContentPack.buffDefs[10].name = "OS Chip Cooldown";
         }
     }
 }

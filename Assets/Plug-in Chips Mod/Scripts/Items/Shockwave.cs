@@ -46,7 +46,7 @@ namespace PlugInChipsMod.Scripts
 
         private void FireShockwave(On.RoR2.CharacterBody.orig_OnSkillActivated orig, RoR2.CharacterBody self, RoR2.GenericSkill skill)
         {
-            var inventoryCount = self.inventory.GetItemCount(base.itemDef);
+            var inventoryCount = self.inventory.GetItemCount(itemDef);
             if (inventoryCount == 1)
             {
                 if (skill.skillFamily == self.GetComponent<SkillLocator>().primary.skillFamily)

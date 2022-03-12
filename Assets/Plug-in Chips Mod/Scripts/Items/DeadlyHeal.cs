@@ -20,7 +20,6 @@ namespace PlugInChipsMod.Scripts
         {
             base.itemDef = serializeableContentPack.itemDefs[1];
 
-            PlugInChips.instance.Logger.LogMessage("Initializing Deadly Heal");
             SetupConfig(config);
             SetupLanguage();
             SetupHooks();
@@ -34,7 +33,6 @@ namespace PlugInChipsMod.Scripts
 
         protected override void SetupHooks()
         {
-            PlugInChips.instance.Logger.LogMessage("Hooking");
             RoR2.GlobalEventManager.onCharacterDeathGlobal += GlobalEventManager_onCharacterDeathGlobal;
         }
 
