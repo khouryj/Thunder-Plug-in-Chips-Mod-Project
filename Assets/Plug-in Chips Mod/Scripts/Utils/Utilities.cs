@@ -17,6 +17,13 @@ namespace PlugInChipsMod.Scripts
         public static ItemDef shockwave;
         public static ItemDef osChip;
 
+        public static BuffDef SuperTaunt;
+        public static BuffDef SuperDeadlyHeal;
+        public static BuffDef SuperOffensiveHeal;
+        public static BuffDef SuperAntiChain;
+        public static BuffDef SuperShockwave;
+        public static BuffDef cooldown;
+
         public static void Init()
         {
             offensiveHeal = serializeableContentPack.itemDefs[2];

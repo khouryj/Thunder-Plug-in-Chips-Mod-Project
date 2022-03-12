@@ -4,6 +4,7 @@ using RoR2;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using static PlugInChipsMod.Scripts.Utilities;
 using static PlugInChipsMod.PlugInChips;
 using HarmonyLib;
 using RoR2.Items;
@@ -15,7 +16,8 @@ namespace PlugInChipsMod.Scripts
     public class OSChip : CustomItem<OSChip>
     {
         //Array of Buffdefs, use cooldowns for timing
-
+        //Dont forget to reset everything on stage change if needed (think of logic!)
+        //Stage change might actually be covered here
 
         public override string Name => "OS Chip";
         public override string Pickup => "The combined power of all plug-in chips. <style=cIsVoid>Corrupts all plug-in chips.</style>";
@@ -26,10 +28,11 @@ namespace PlugInChipsMod.Scripts
         private static ItemDef.Pair[] conversions;
         private static Harmony harmony = PlugInChips.harmony;
 
-        private static string ActiveBuff1, ActiveBuff2;
+        private static BuffDef ActiveBuff1, ActiveBuff2;
+        private static BuffDef[] buffs;
         private static CharacterBody cb;
-        private static readonly string[] chips = { "Anti", "Deadly", "Offensive", "Taunt", "Shockwave" };
         private static System.Random rnd = new System.Random();
+        private static float cooldownTime, buffTime;
 
         private static int prevItemCount;
         private static int ItemCount;
@@ -48,6 +51,8 @@ namespace PlugInChipsMod.Scripts
             prevItemCount = 0;
             ActiveBuff1 = null;
             ActiveBuff2 = null;
+            cb = null;
+            buffs = new BuffDef[] { SuperAntiChain, SuperDeadlyHeal, SuperOffensiveHeal, SuperShockwave, SuperTaunt };
             
             SetupLanguage();
             SetupHooks();
@@ -61,13 +66,21 @@ namespace PlugInChipsMod.Scripts
 
         private void RoR2Application_onFixedUpdate()
         {
-            if (cb)
+            if (!cb) { return; }
+            
+            if (ActiveBuff1 != null && ActiveBuff2 != null && !cb.HasBuff(cooldown) && !cb.HasBuff(ActiveBuff1) && !cb.HasBuff(ActiveBuff2))
+            {
+                cb.AddTimedBuff(cooldown, cooldownTime);
+                ActiveBuff1 = null;
+                ActiveBuff2 = null;
+                return;
+            }
+            else if (!cb.HasBuff(cooldown) && ActiveBuff1 == null && ActiveBuff2 == null)
             {
                 GetCurrentBuffs(ActiveBuff1, ActiveBuff2);
-                switch (ActiveBuff1)
-                {
-                    
-                }
+                cb.AddTimedBuff(ActiveBuff1, buffTime);
+                cb.AddTimedBuff(ActiveBuff2, buffTime);
+                return;
             }
         }
 
@@ -103,16 +116,11 @@ namespace PlugInChipsMod.Scripts
             }
         }
 
-        private static void GetCurrentBuffs(string first, string second)
+        private static void GetCurrentBuffs(BuffDef one, BuffDef two)
         {
-            if (first == null || second == null)
-            {
-                first = chips[rnd.Next(0, 4)];
-                second = chips[rnd.Next(0, 4)];
-                while (first == second) { second = chips[rnd.Next(0, 4)]; }
-                return;
-            }
-            else { return; }
+            one = buffs[rnd.Next(0, 4)];
+            two = buffs[rnd.Next(0, 4)];
+            while (two == one) { two = buffs[rnd.Next(0, 4)]; }
         }
 
 
