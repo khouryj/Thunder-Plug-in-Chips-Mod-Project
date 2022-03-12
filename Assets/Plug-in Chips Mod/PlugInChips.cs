@@ -7,13 +7,14 @@ using R2API.Utils;
 using R2API;
 using System.Reflection;
 using System;
+using HarmonyLib;
 using System.Linq;
 using PlugInChipsMod.Scripts;
+using ChipsItem = PlugInChipsMod.Scripts.CustomItem;
+using ChipsEquipment = PlugInChipsMod.Scripts.CustomEquipment;
 using Path = System.IO.Path;
 using RoR2;
-using SearchableAttribute = HG.Reflection.SearchableAttribute;
 
-[assembly: SearchableAttribute.OptIn]
 namespace PlugInChipsMod
 {
     [BepInPlugin(MODGUID, MODNAME, MODVERSION)]
@@ -38,6 +39,7 @@ namespace PlugInChipsMod
 
         private bool load = true;
         public static PlugInChips instance;
+        public static Harmony harmony;
 
         public static Dictionary<string, string> ShaderLookup = new Dictionary<string, string>()
     {
@@ -55,16 +57,19 @@ namespace PlugInChipsMod
         {
             instance = this;
             Logger = base.Logger;
+            harmony = new Harmony(MODGUID);
 
             LoadAssetBundle();
             if (!load) { Logger.LogMessage("Failed to load in assetbundle, check file name/path."); return; }
 
             Projectiles.Init();
             Buffs.Init();
+            ChipsItem.InitializeItems();
+            ChipsEquipment.InitializeEquipment();
             Utilities.Init();
 
             ContentPackProvider.Init(); //i hecking love content packs
-            SearchableAttribute.ScanAssembly(Assembly.GetExecutingAssembly());
+            harmony.PatchAll();
         }
 
         private void LoadAssetBundle()

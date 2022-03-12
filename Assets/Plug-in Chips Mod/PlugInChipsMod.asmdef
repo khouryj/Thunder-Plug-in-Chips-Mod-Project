@@ -14,7 +14,8 @@
         "BepInEx.MonoMod.HookGenPatcher.dll",
         "com.unity.multiplayer-hlapi.Runtime.dll",
         "MMHOOK_Assembly-CSharp.dll",
-        "HGCSharpUtils.dll"
+        "HGCSharpUtils.dll",
+        "0Harmony.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": [],

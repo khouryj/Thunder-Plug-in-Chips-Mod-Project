@@ -7,6 +7,8 @@ using System.Reflection;
 using System.Linq;
 using PlugInChipsMod;
 using RoR2.ExpansionManagement;
+using RoR2.Items;
+using System.Collections.Generic;
 
 namespace PlugInChipsMod.Scripts
 {
@@ -45,25 +47,21 @@ namespace PlugInChipsMod.Scripts
 
         protected virtual void SetupHooks() { }
 
-        [SystemInitializer(typeof(ItemCatalog))]
         public static void InitializeItems()
         {
             var Items = Assembly.GetExecutingAssembly().GetTypes().Where(type => !type.IsAbstract && type.IsSubclassOf(typeof(CustomItem)));
             foreach (var item in Items)
             {
                 CustomItem chipsItem = (CustomItem)Activator.CreateInstance(item);
-                PlugInChips.instance.Logger.LogMessage("Initializing Items...");
+                //PlugInChips.instance.Logger.LogMessage("Initializing Items...");
                 chipsItem.Init(PlugInChips.instance.Config);
 
                 //From bubbet's itembase
                 if (chipsItem.dlcRequired)
                 {
                     chipsItem.itemDef.requiredExpansion = ExpansionCatalog.expansionDefs.FirstOrDefault(x => x.nameToken == "DLC1_NAME");
-                    chipsItem.ConsumedItems();
                 }
             }
         }
-
-        protected virtual void ConsumedItems() {}
     }
 }

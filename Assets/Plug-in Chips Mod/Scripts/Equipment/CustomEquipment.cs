@@ -44,14 +44,13 @@ namespace PlugInChipsMod.Scripts
 
         protected virtual void SetupHooks() { }
 
-        [SystemInitializer(typeof(EquipmentCatalog))]
         public static void InitializeEquipment()
         {
             var Equipment = Assembly.GetExecutingAssembly().GetTypes().Where(type => !type.IsAbstract && type.IsSubclassOf(typeof(CustomEquipment)));
             foreach (var equipment in Equipment)
             {
                 CustomEquipment equip = (CustomEquipment)Activator.CreateInstance(equipment);
-                PlugInChips.instance.Logger.LogMessage("Initializing Equipment...");
+               // PlugInChips.instance.Logger.LogMessage("Initializing Equipment...");
                 equip.Init(PlugInChips.instance.Config);
             }
         }
