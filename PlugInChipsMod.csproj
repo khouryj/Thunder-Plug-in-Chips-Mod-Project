@@ -70,6 +70,7 @@
      <Compile Include="Assets\Plug-in Chips Mod\Scripts\Items\TauntUp.cs" />
      <Compile Include="Assets\Plug-in Chips Mod\Scripts\Utils\DoppelgangerAllySpawnCard.cs" />
      <Compile Include="Assets\Plug-in Chips Mod\Scripts\Utils\Projectiles.cs" />
+     <Compile Include="Assets\Plug-in Chips Mod\Scripts\Utils\Utilities.cs" />
      <None Include="Assets\Plug-in Chips Mod\PlugInChipsMod.asmdef" />
  <Reference Include="UnityEngine">
  <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>

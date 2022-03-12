@@ -18,6 +18,7 @@ namespace PlugInChipsMod.Scripts
         public override string Lore => "This chip was lost by a unit who got too greedy, and fought an enemy too powerful for them. Hopefully you do not end up in the same situation.";
 
         private BuffDef Taunted;
+        private CharacterBody victimbody;
         public ConfigEntry<float> DamageIncrease, DamageTakenIncrease, MovementSpeedIncrease;
 
         public override void Init(ConfigFile config)
@@ -44,10 +45,20 @@ namespace PlugInChipsMod.Scripts
 
         private void ApplyBuff(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
         {
-            if (damageInfo.attacker)
+            if (damageInfo?.attacker)
             {
-                CharacterBody victimbody = self.GetComponent<CharacterBody>();
-                var inventoryCount = damageInfo.attacker.GetComponent<CharacterBody>().inventory.GetItemCount(base.itemDef);
+                int inventoryCount = 0;
+                try
+                {
+                    victimbody = self.GetComponent<CharacterBody>();
+                    inventoryCount = damageInfo.attacker.GetComponent<CharacterBody>().inventory.GetItemCount(base.itemDef);
+                }
+                catch (NullReferenceException NRE)
+                {
+                    PlugInChips.instance.Logger.LogWarning("GameObject does not have a valid characterbody");
+                    orig(self, damageInfo);
+                    return;
+                }
                 if (inventoryCount > 0 && !victimbody.HasBuff(Taunted) && victimbody != damageInfo.attacker.GetComponent<CharacterBody>())
                 {
                     victimbody.baseDamage += (DamageIncrease.Value * inventoryCount / 100 * victimbody.baseDamage);

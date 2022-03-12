@@ -18,9 +18,9 @@ MonoBehaviour:
   descriptionToken: ITEM_DEADLY_HEAL_DESC
   loreToken: ITEM_DEADLY_HEAL_LORE
   unlockableDef: {fileID: 0}
-  pickupModelPrefab: {fileID: 8416729265249902395, guid: b8fcaa80d4ada4e40b8576f68403fa04,
+  pickupModelPrefab: {fileID: 8491778323205527232, guid: dbacb2643e71cba4e94d481b09f71d3c,
     type: 3}
-  pickupIconSprite: {fileID: 21300000, guid: 2d3221a9b06b9f04e802150b75deed49, type: 3}
+  pickupIconSprite: {fileID: 21300000, guid: 502dbae6b0701ea40bcb73267931db60, type: 3}
   hidden: 0
   canRemove: 1
   tags: 02000000

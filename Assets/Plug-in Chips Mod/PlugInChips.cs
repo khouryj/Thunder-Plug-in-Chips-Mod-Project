@@ -22,6 +22,12 @@ namespace PlugInChipsMod
     [R2APISubmoduleDependency(nameof(LanguageAPI), nameof(PrefabAPI))]
     public class PlugInChips : BaseUnityPlugin
     {
+        /*
+        Big thanks to KomradeSpectre for the item creation tutorial, I would be lost without it.
+        Also for the ItemBase and EquipmentBase classes as I pretty much used those for the CustomItem and CustomEquipment abstracts
+        Thanks to bubbet for the help too with this project and for the code on custom void items
+        Thanks to the modding community in general for being a big help.
+        */
         public const string MODNAME = "Plug-In Chips Mod";
         public const string MODVERSION = "1.0.0";
         public const string MODGUID = "com.RumblingJOSEPH.PlugInChipsMod";
@@ -55,6 +61,7 @@ namespace PlugInChipsMod
 
             Projectiles.Init();
             Buffs.Init();
+            Utilities.Init();
 
             ContentPackProvider.Init(); //i hecking love content packs
             SearchableAttribute.ScanAssembly(Assembly.GetExecutingAssembly());

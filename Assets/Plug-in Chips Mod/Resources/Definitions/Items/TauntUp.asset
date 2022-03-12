@@ -18,9 +18,9 @@ MonoBehaviour:
   descriptionToken: ITEM_TAUNT-UP_DESC
   loreToken: ITEM_TAUNT-UP_LORE
   unlockableDef: {fileID: 0}
-  pickupModelPrefab: {fileID: 8137636701207848387, guid: 2aa348ffe4181dc4492a662dd2ebdc7c,
+  pickupModelPrefab: {fileID: 3785145180134128246, guid: cc88ef8206abc35478ddad71ae9bd06b,
     type: 3}
-  pickupIconSprite: {fileID: 21300000, guid: e5bc958bc499a5b4db9f7cb512029923, type: 3}
+  pickupIconSprite: {fileID: 21300000, guid: d5c2e5eb6110ed749b971aca6c2874f0, type: 3}
   hidden: 0
   canRemove: 1
   tags: 
