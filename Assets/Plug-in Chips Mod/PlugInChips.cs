@@ -64,11 +64,11 @@ namespace PlugInChipsMod
 
             Projectiles.Init();
             Buffs.Init();
-            ChipsItem.InitializeItems();
-            ChipsEquipment.InitializeEquipment();
             Utilities.Init();
 
             ContentPackProvider.Init(); //i hecking love content packs
+            ChipsItem.InitializeItems();
+            ChipsEquipment.InitializeEquipment();
             harmony.PatchAll();
         }
 

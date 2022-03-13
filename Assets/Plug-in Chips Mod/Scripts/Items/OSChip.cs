@@ -31,46 +31,112 @@ namespace PlugInChipsMod.Scripts
 
         private static BuffDef ActiveBuff1, ActiveBuff2;
         private static BuffDef[] buffs;
-        private static CharacterBody cb;
         private static System.Random rnd = new System.Random();
-        private static float cooldownTime, buffTime;
+        private float cooldownTime, buffTime;
 
-        private static int prevItemCount;
-        private static int ItemCount;
-        private static DamageInfo di = new DamageInfo()
-        {
-            damageColorIndex = DamageColorIndex.SuperBleed,
-            crit = false,
-            rejected = false,
-            damageType = DamageType.Generic
-        };
 
         public override void Init(ConfigFile config)
         {
-            itemDef = Utilities.osChip;
-            ItemCount = 0;
-            prevItemCount = 0;
+            itemDef = osChip;
             cooldownTime = 15f;
             buffTime = 30f;
             ActiveBuff1 = null;
             ActiveBuff2 = null;
-            cb = null;
             buffs = new BuffDef[] { SuperAntiChain, SuperDeadlyHeal, SuperOffensiveHeal, SuperShockwave, SuperTaunt };
-            
+
             SetupLanguage();
             SetupHooks();
         }
 
         protected override void SetupHooks()
         {
-            Inventory.onInventoryChangedGlobal += new Action<Inventory>(Removal);
-            RoR2Application.onFixedUpdate += RoR2Application_onFixedUpdate;
             GlobalEventManager.onCharacterDeathGlobal += new Action<DamageReport>(superDeadlyHeal);
             On.RoR2.HealthComponent.TakeDamage += superTaunt;
             On.RoR2.GlobalEventManager.OnHitEnemy += superOffensive;
             On.RoR2.CharacterBody.OnTakeDamageServer += superAntiChain;
             On.RoR2.CharacterBody.OnSkillActivated += superShockwave;
+            //On.RoR2.CharacterBody.RemoveBuff_BuffDef += SwapBuffs;
+            Stage.onStageStartGlobal += RestartBuff;
+            On.RoR2.CharacterBody.OnInventoryChanged += Detect;
+            On.RoR2.CharacterBody.OnBuffFinalStackLost += CycleBuffs;
+            Run.onRunStartGlobal += Reset;
         }
+
+        private void Reset(Run obj)
+        {
+            ActiveBuff1 = null;
+            ActiveBuff2 = null;
+            cooldownTime = 15f;
+            buffTime = 30f;
+        }
+
+        private void CycleBuffs(On.RoR2.CharacterBody.orig_OnBuffFinalStackLost orig, CharacterBody self, BuffDef buffDef)
+        {
+            if (self && buffDef)
+            {
+                if (buffDef == cooldown)
+                {
+                    GetCurrentBuffs();
+                    self.AddTimedBuff(ActiveBuff1, buffTime);
+                    self.AddTimedBuff(ActiveBuff2, buffTime);
+                }
+                else if (buffDef == ActiveBuff1 || buffDef == ActiveBuff2)
+                {
+                    self.AddTimedBuff(cooldown, cooldownTime);
+                    ActiveBuff1 = null;
+                    ActiveBuff2 = null;
+                }
+            }
+            orig(self, buffDef);
+        }
+
+        private void Detect(On.RoR2.CharacterBody.orig_OnInventoryChanged orig, CharacterBody self)
+        {
+            if (self)
+            {
+                if (self.inventory.GetItemCount(itemDef) >= 1 && ActiveBuff1 == null && ActiveBuff2 == null && !self.HasBuff(cooldown))
+                {
+                    GetCurrentBuffs();
+                    self.AddTimedBuff(ActiveBuff1, buffTime);
+                    self.AddTimedBuff(ActiveBuff2, buffTime);
+                }
+            }
+            orig(self);
+        }
+
+        private void RestartBuff(Stage obj)
+        {
+            ActiveBuff1 = null;
+            ActiveBuff2 = null;
+            CharacterBody cb = PlayerCharacterMasterController.instances[0].body;
+            if (cb && cb.inventory.GetItemCount(itemDef) > 0)
+            {
+                GetCurrentBuffs();
+                cb.AddTimedBuff(ActiveBuff1, buffTime);
+                cb.AddTimedBuff(ActiveBuff2, buffTime);
+                return;
+            }
+        }
+
+        /*private void SwapBuffs(On.RoR2.CharacterBody.orig_RemoveBuff_BuffDef orig, CharacterBody self, BuffDef buffDef)
+        {
+            if (self && buffDef)
+            {
+                if (buffDef == cooldown)
+                {
+                    GetCurrentBuffs();
+                    self.AddTimedBuff(ActiveBuff1, buffTime);
+                    self.AddTimedBuff(ActiveBuff2, buffTime);
+                }
+                else if (buffDef == ActiveBuff1 || buffDef == ActiveBuff2)
+                {
+                    self.AddTimedBuff(cooldown, buffTime);
+                    ActiveBuff1 = null;
+                    ActiveBuff2 = null;
+                }
+            }
+            orig(self, buffDef);
+        }*/
 
         private void superShockwave(On.RoR2.CharacterBody.orig_OnSkillActivated orig, CharacterBody self, GenericSkill skill)
         {
@@ -99,7 +165,7 @@ namespace PlugInChipsMod.Scripts
 
         private void superAntiChain(On.RoR2.CharacterBody.orig_OnTakeDamageServer orig, CharacterBody self, DamageReport damageReport)
         {
-            if (self.HasBuff(SuperAntiChain))
+            if (self && self.HasBuff(SuperAntiChain))
             {
                 var inventoryCount = self.inventory.GetItemCount(itemDef);
                 if (inventoryCount > 0 && !self.HasBuff(RoR2Content.Buffs.Immune))
@@ -143,7 +209,7 @@ namespace PlugInChipsMod.Scripts
                     attackerbody = damageInfo.attacker.GetComponent<CharacterBody>();
                     inventoryCount = attackerbody.inventory.GetItemCount(itemDef);
                 }
-                catch (NullReferenceException)
+                catch (Exception)
                 {
                     orig(self, damageInfo);
                     return;
@@ -159,8 +225,8 @@ namespace PlugInChipsMod.Scripts
                         damageInfo.damage *= 3f + (.25f * (inventoryCount - 1));
                     }
                 }
-                orig(self, damageInfo);
             }
+            orig(self, damageInfo);
         }
 
         private void superDeadlyHeal(DamageReport obj)
@@ -178,63 +244,12 @@ namespace PlugInChipsMod.Scripts
             }
         }
 
-        private void RoR2Application_onFixedUpdate()
+        private static void GetCurrentBuffs()
         {
-            if (!cb) { return; }
-            
-            if (ActiveBuff1 != null && ActiveBuff2 != null && !cb.HasBuff(cooldown) && !cb.HasBuff(ActiveBuff1) && !cb.HasBuff(ActiveBuff2))
-            {
-                cb.AddTimedBuff(cooldown, cooldownTime);
-                ActiveBuff1 = null;
-                ActiveBuff2 = null;
-                return;
-            }
-            else if (!cb.HasBuff(cooldown) && ActiveBuff1 == null && ActiveBuff2 == null)
-            {
-                GetCurrentBuffs(ActiveBuff1, ActiveBuff2);
-                cb.AddTimedBuff(ActiveBuff1, buffTime);
-                cb.AddTimedBuff(ActiveBuff2, buffTime);
-                return;
-            }
-        }
-
-        private void Removal(Inventory obj)
-        {
-            if (obj)
-            { 
-                ItemCount = obj.GetItemCount(Utilities.osChip);
-                if (ItemCount == prevItemCount) { return; }
-                if (ItemCount > prevItemCount)
-                {
-                    prevItemCount++;
-                    if (cb == null) { cb = obj.GetComponentInParent<CharacterBody>(); }
-                }
-                else if (ItemCount < prevItemCount)
-                {
-                    try
-                    {
-                        HealthComponent hc = obj.GetComponentInParent<HealthComponent>();
-                        di.damage = hc.health * (new System.Random().Next(1, 45) / 100);
-                        if (hc.body.teamComponent.teamIndex != TeamIndex.Monster)
-                        {
-                            Chat.AddMessage("<style=cIsHealth>WARNING: REMOVAL OF THIS CHIP HAS DAMAGED UNIT, SEEK MAINTENANCE IMMEDIATELY!</style>");
-                            hc.TakeDamage(di);
-                        }
-                    }
-                    catch (Exception)
-                    {
-                        PlugInChips.instance.Logger.LogWarning("Gameobject of inventory doesnt have a healthcomponent");
-                        return;
-                    }
-                }
-            }
-        }
-
-        private static void GetCurrentBuffs(BuffDef one, BuffDef two)
-        {
-            one = buffs[rnd.Next(0, 4)];
-            two = buffs[rnd.Next(0, 4)];
-            while (two == one) { two = buffs[rnd.Next(0, 4)]; }
+            ActiveBuff1 = buffs[rnd.Next(0, 5)];
+            ActiveBuff2 = buffs[rnd.Next(0, 5)];
+            while (ActiveBuff2 == ActiveBuff1) { ActiveBuff2 = buffs[rnd.Next(0, 4)]; }
+            PlugInChips.instance.Logger.LogMessage("buffs selected: " + ActiveBuff1.name + ", " + ActiveBuff2.name);
         }
 
 
@@ -269,7 +284,7 @@ namespace PlugInChipsMod.Scripts
                 itemDef2 = osChip
             };
 
-            Utilities.InitializeCorruptedItem(conversions);
+            InitializeCorruptedItem(conversions);
         }
     }
 }

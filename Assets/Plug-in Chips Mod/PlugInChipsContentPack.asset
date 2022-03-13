@@ -36,6 +36,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a299822747a0e4c479ff385d748299a3, type: 2}
   - {fileID: 11400000, guid: 6f74cd0be0e182347a0474ca8d11ccd0, type: 2}
   - {fileID: 11400000, guid: 070073bf472e9cb45b6fe4c27f27fe94, type: 2}
+  - {fileID: 11400000, guid: 3ce6787b98bf29842851fb0031cd6472, type: 2}
+  - {fileID: 11400000, guid: c0ba9789fd6ce7b4a9fc29a9ec14c0ae, type: 2}
+  - {fileID: 11400000, guid: f35bb03a16512274ba009ded19cece83, type: 2}
+  - {fileID: 11400000, guid: 9cff4602df167ec48bbae778731887f7, type: 2}
+  - {fileID: 11400000, guid: 792fb87f4a5f0e946ab20dcfd5389d52, type: 2}
+  - {fileID: 11400000, guid: aa5448562783829428deb666e2f1a9d1, type: 2}
   eliteDefs: []
   unlockableDefs: []
   survivorDefs: []
