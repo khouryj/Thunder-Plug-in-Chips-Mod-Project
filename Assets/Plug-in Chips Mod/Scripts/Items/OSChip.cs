@@ -166,7 +166,7 @@ namespace PlugInChipsMod.Scripts
         private void superAntiChain(On.RoR2.CharacterBody.orig_OnTakeDamageServer orig, CharacterBody self, DamageReport damageReport)
         {
             orig(self, damageReport);
-            if (self)
+            if (self && self.inventory)
             {
                 if (self.HasBuff(SuperAntiChain))
                 {
@@ -187,8 +187,8 @@ namespace PlugInChipsMod.Scripts
             orig(self, damageInfo, victim);
             if (victim && damageInfo.attacker)
             {
-                CharacterBody attackerBody = damageInfo.attacker.GetComponent<CharacterBody>() == null ? null : damageInfo.attacker.GetComponent<CharacterBody>();
-                if (attackerBody)
+                CharacterBody attackerBody = damageInfo.attacker.GetComponent<CharacterBody>() ? null : damageInfo.attacker.GetComponent<CharacterBody>();
+                if (attackerBody && attackerBody.inventory)
                 {
                     if (attackerBody.HasBuff(SuperOffensiveHeal))
                     {

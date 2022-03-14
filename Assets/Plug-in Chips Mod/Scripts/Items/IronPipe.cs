@@ -32,14 +32,19 @@ namespace PlugInChipsMod.Scripts
 
         private void HealthComponent_TakeDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
         {
-            CharacterBody cb = damageInfo.attacker.GetComponent<CharacterBody>() == null ? null : damageInfo.attacker.GetComponent<CharacterBody>();
-            int count = cb.inventory?.GetItemCount(itemDef) == null ? -1 : cb.inventory.GetItemCount(itemDef);
-            if (count <= 0 || cb == null)
+            CharacterBody cb = damageInfo.attacker.GetComponent<CharacterBody>() ? null : damageInfo.attacker.GetComponent<CharacterBody>();
+            if (!cb.inventory)
             {
                 orig(self, damageInfo);
                 return;
             }
-            if (damageInfo.crit)
+            int count = cb.inventory.GetItemCount(itemDef);
+            if (count <= 0)
+            {
+                orig(self, damageInfo);
+                return;
+            }
+            else if (damageInfo.crit)
             {
                 damageInfo.damage *= 1.05f + (.05f * (count - 1));
                 if (Util.CheckRoll(5f + (3f * (count - 1)), cb.master.luck, cb.master))

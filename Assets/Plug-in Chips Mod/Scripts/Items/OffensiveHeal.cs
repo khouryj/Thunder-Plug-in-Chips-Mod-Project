@@ -44,10 +44,10 @@ namespace PlugInChipsMod.Scripts
             orig(self, damageInfo, victim);
             if (victim && damageInfo.attacker)
             {
-                CharacterBody attackerBody = damageInfo.attacker.GetComponent<CharacterBody>() == null ? null : damageInfo.attacker.GetComponent<CharacterBody>();
-                if (attackerBody)
+                CharacterBody attackerBody = damageInfo.attacker.GetComponent<CharacterBody>() ? null : damageInfo.attacker.GetComponent<CharacterBody>();
+                if (attackerBody && attackerBody.inventory)
                 {
-                    var inventoryCount = attackerBody.inventory.GetItemCount(base.itemDef);
+                    var inventoryCount = attackerBody.inventory.GetItemCount(itemDef);
                     float stackIncrease = BaseHealingAmountIncrements.Value / 100;
                     float healingPercent = BaseHealingAmount.Value / 100;
                     if (inventoryCount == 1)

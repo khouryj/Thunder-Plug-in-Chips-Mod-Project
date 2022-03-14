@@ -51,7 +51,7 @@ namespace PlugInChipsMod.Scripts
                 try
                 {
                     victimbody = self.GetComponent<CharacterBody>();
-                    inventoryCount = damageInfo.attacker.GetComponent<CharacterBody>().inventory.GetItemCount(base.itemDef);
+                    inventoryCount = damageInfo.attacker.GetComponent<CharacterBody>().inventory.GetItemCount(itemDef);
                 }
                 catch (NullReferenceException NRE)
                 {

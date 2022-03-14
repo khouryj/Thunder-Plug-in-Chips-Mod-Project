@@ -45,6 +45,7 @@ namespace PlugInChipsMod.Scripts
         private void Invulnerability(On.RoR2.CharacterBody.orig_OnTakeDamageServer orig, CharacterBody self, DamageReport damageReport)
         {
             orig(self, damageReport);
+            if (!self || !self.inventory) { return; }
             var inventoryCount = self.inventory.GetItemCount(itemDef);
             if (inventoryCount == 1 && !self.HasBuff(RoR2Content.Buffs.Immune) && !self.HasBuff(hiddenCooldown))
             {

@@ -18,7 +18,7 @@ namespace PlugInChipsMod.Scripts
 
         public override void Init(ConfigFile config)
         {
-            base.itemDef = serializeableContentPack.itemDefs[1];
+            itemDef = serializeableContentPack.itemDefs[1];
 
             SetupConfig(config);
             SetupLanguage();
@@ -38,7 +38,7 @@ namespace PlugInChipsMod.Scripts
 
         private void GlobalEventManager_onCharacterDeathGlobal(DamageReport damageReport)
         {
-            if (damageReport?.attackerBody)
+            if (damageReport?.attackerBody && damageReport.attackerBody.inventory)
             {
                 var inventoryCount = damageReport.attackerBody.inventory.GetItemCount(base.itemDef);
                 float stackIncrease = BaseHealingAmountIncrements.Value / 100;
