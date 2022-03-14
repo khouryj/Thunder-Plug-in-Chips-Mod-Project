@@ -16,6 +16,7 @@ namespace PlugInChipsMod.Scripts
         public static ItemDef antiChainDamage;
         public static ItemDef shockwave;
         public static ItemDef osChip;
+        public static ItemDef IronPipe;
 
         public static BuffDef SuperTaunt;
         public static BuffDef SuperDeadlyHeal;
@@ -33,6 +34,7 @@ namespace PlugInChipsMod.Scripts
             antiChainDamage = serializeableContentPack.itemDefs[0];
             shockwave = serializeableContentPack.itemDefs[3];
             osChip = serializeableContentPack.itemDefs[5];
+            IronPipe = serializeableContentPack.itemDefs[6];
 
             Taunted = serializeableContentPack.buffDefs[2];
             SuperTaunt = serializeableContentPack.buffDefs[5];

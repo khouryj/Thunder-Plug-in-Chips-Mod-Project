@@ -44,6 +44,7 @@ namespace PlugInChipsMod.Scripts
 
         private void Invulnerability(On.RoR2.CharacterBody.orig_OnTakeDamageServer orig, CharacterBody self, DamageReport damageReport)
         {
+            orig(self, damageReport);
             var inventoryCount = self.inventory.GetItemCount(itemDef);
             if (inventoryCount == 1 && !self.HasBuff(RoR2Content.Buffs.Immune) && !self.HasBuff(hiddenCooldown))
             {
@@ -58,7 +59,6 @@ namespace PlugInChipsMod.Scripts
                 self.AddTimedBuffAuthority(RoR2Content.Buffs.Immune.buffIndex, BaseInvulnerabilityTime.Value + (InvulnerabilityTimeIncrements.Value * inventoryCount) - InvulnerabilityTimeIncrements.Value);
                 self.AddTimedBuff(hiddenCooldown, BaseInvulnerabilityTime.Value + (InvulnerabilityTimeIncrements.Value * inventoryCount) - InvulnerabilityTimeIncrements.Value + 3f);
             }
-            orig(self, damageReport);
         }
     }
 }

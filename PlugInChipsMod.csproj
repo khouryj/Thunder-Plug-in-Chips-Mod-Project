@@ -64,6 +64,7 @@
      <Compile Include="Assets\Plug-in Chips Mod\Scripts\Items\AntiChainDamage.cs" />
      <Compile Include="Assets\Plug-in Chips Mod\Scripts\Items\CustomItem.cs" />
      <Compile Include="Assets\Plug-in Chips Mod\Scripts\Items\DeadlyHeal.cs" />
+     <Compile Include="Assets\Plug-in Chips Mod\Scripts\Items\IronPipe.cs" />
      <Compile Include="Assets\Plug-in Chips Mod\Scripts\Items\OSChip.cs" />
      <Compile Include="Assets\Plug-in Chips Mod\Scripts\Items\OffensiveHeal.cs" />
      <Compile Include="Assets\Plug-in Chips Mod\Scripts\Items\Shockwave.cs" />

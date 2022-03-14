@@ -41,9 +41,10 @@ namespace PlugInChipsMod.Scripts
 
         private void HealPlayer(On.RoR2.GlobalEventManager.orig_OnHitEnemy orig, RoR2.GlobalEventManager self, RoR2.DamageInfo damageInfo, GameObject victim)
         {
+            orig(self, damageInfo, victim);
             if (victim && damageInfo.attacker)
             {
-                CharacterBody attackerBody = damageInfo.attacker.GetComponent<CharacterBody>();
+                CharacterBody attackerBody = damageInfo.attacker.GetComponent<CharacterBody>() == null ? null : damageInfo.attacker.GetComponent<CharacterBody>();
                 if (attackerBody)
                 {
                     var inventoryCount = attackerBody.inventory.GetItemCount(base.itemDef);
@@ -59,7 +60,6 @@ namespace PlugInChipsMod.Scripts
                     }
                 }
             }
-            orig(self, damageInfo, victim);
         }
     }
 }

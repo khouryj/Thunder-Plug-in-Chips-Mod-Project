@@ -165,35 +165,41 @@ namespace PlugInChipsMod.Scripts
 
         private void superAntiChain(On.RoR2.CharacterBody.orig_OnTakeDamageServer orig, CharacterBody self, DamageReport damageReport)
         {
-            if (self && self.HasBuff(SuperAntiChain))
+            orig(self, damageReport);
+            if (self)
             {
-                var inventoryCount = self.inventory.GetItemCount(itemDef);
-                if (inventoryCount > 0 && !self.HasBuff(RoR2Content.Buffs.Immune))
+                if (self.HasBuff(SuperAntiChain))
                 {
-                    if (!damageReport.isFallDamage)
+                    var inventoryCount = self.inventory.GetItemCount(itemDef);
+                    if (inventoryCount > 0 && !self.HasBuff(RoR2Content.Buffs.Immune))
                     {
-                        self.AddTimedBuff(RoR2Content.Buffs.Immune, 3f + (.01f * (inventoryCount - 1)));
+                        if (!damageReport.isFallDamage)
+                        {
+                            self.AddTimedBuff(RoR2Content.Buffs.Immune, 3f + (.01f * (inventoryCount - 1)));
+                        }
                     }
                 }
             }
-            orig(self, damageReport);
         }
 
         private void superOffensive(On.RoR2.GlobalEventManager.orig_OnHitEnemy orig, GlobalEventManager self, DamageInfo damageInfo, GameObject victim)
         {
+            orig(self, damageInfo, victim);
             if (victim && damageInfo.attacker)
             {
-                CharacterBody attackerBody = damageInfo.attacker.GetComponent<CharacterBody>();
-                if (attackerBody && attackerBody.HasBuff(SuperOffensiveHeal))
+                CharacterBody attackerBody = damageInfo.attacker.GetComponent<CharacterBody>() == null ? null : damageInfo.attacker.GetComponent<CharacterBody>();
+                if (attackerBody)
                 {
-                    var inventoryCount = attackerBody.inventory.GetItemCount(itemDef);
-                    if (inventoryCount > 0)
+                    if (attackerBody.HasBuff(SuperOffensiveHeal))
                     {
-                        attackerBody.healthComponent.Heal(damageInfo.damage * (.20f + (.05f * (inventoryCount - 1))), default(ProcChainMask));
+                        var inventoryCount = attackerBody.inventory.GetItemCount(itemDef);
+                        if (inventoryCount > 0)
+                        {
+                            attackerBody.healthComponent.Heal(damageInfo.damage * (.20f + (.05f * (inventoryCount - 1))), default(ProcChainMask));
+                        }
                     }
                 }
             }
-            orig(self, damageInfo, victim);
         }
 
         private void superTaunt(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
@@ -231,7 +237,7 @@ namespace PlugInChipsMod.Scripts
 
         private void superDeadlyHeal(DamageReport obj)
         {
-            if (obj?.attackerBody)
+            if (obj.attackerBody)
             {
                 if (obj.attackerBody.HasBuff(SuperDeadlyHeal))
                 {
