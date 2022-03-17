@@ -17,7 +17,7 @@
         "HGCSharpUtils.dll",
         "0Harmony.dll"
     ],
-    "autoReferenced": true,
+    "autoReferenced": false,
     "defineConstraints": [],
     "versionDefines": [],
     "noEngineReferences": false

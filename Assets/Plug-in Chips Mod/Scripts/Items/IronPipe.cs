@@ -32,7 +32,7 @@ namespace PlugInChipsMod.Scripts
 
         private void HealthComponent_TakeDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
         {
-            CharacterBody cb = damageInfo.attacker.GetComponent<CharacterBody>() ? null : damageInfo.attacker.GetComponent<CharacterBody>();
+            CharacterBody cb = damageInfo.attacker?.GetComponent<CharacterBody>() ? damageInfo.attacker.GetComponent<CharacterBody>() : null;
             if (!cb.inventory)
             {
                 orig(self, damageInfo);

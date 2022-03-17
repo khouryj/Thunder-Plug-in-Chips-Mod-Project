@@ -187,7 +187,7 @@ namespace PlugInChipsMod.Scripts
             orig(self, damageInfo, victim);
             if (victim && damageInfo.attacker)
             {
-                CharacterBody attackerBody = damageInfo.attacker.GetComponent<CharacterBody>() ? null : damageInfo.attacker.GetComponent<CharacterBody>();
+                CharacterBody attackerBody = damageInfo.attacker.GetComponent<CharacterBody>() ? damageInfo.attacker.GetComponent<CharacterBody>() : null;
                 if (attackerBody && attackerBody.inventory)
                 {
                     if (attackerBody.HasBuff(SuperOffensiveHeal))
