@@ -16,19 +16,16 @@ namespace PlugInChipsMod.Scripts
     [HarmonyPatch]
     public class OSChip : CustomItem<OSChip>
     {
-        //Array of Buffdefs, use cooldowns for timing
-        //Dont forget to reset everything on stage change if needed (think of logic!)
-        //Stage change might actually be covered here
-
         public override string Name => "OS Chip";
         public override string Pickup => "The combined power of all plug-in chips. <style=cIsVoid>Corrupts all plug-in chips.</style>";
         public override string Desc => "This chip will apply two randomly selected <style=cIsUtility>SUPERCHARGED</style> effects of the other plugin chips for <style=cIsUtility>30 seconds</style>, then cooldown for <style=cIsUtility>15 seconds</style>. <style=cIsVoid>Corrupts all plug-in chips</style>";
         public override string Lore => "The core chip of any unit.\n <style=cIsHealth>Note: Removal of this chip means total malfunction of unit. Do not remove under any circumstances.</style>";
+        //Set dlc requirement for void item, see base for implementation
         public override bool dlcRequired => true;
-
+        //ItemDef.Pair array used to add void conversions to the dictionary in the base game
         private static ItemDef.Pair[] conversions;
         private static Harmony harmony = PlugInChips.harmony;
-
+        //variables used for handling buffs
         private static BuffDef ActiveBuff1, ActiveBuff2;
         private static BuffDef[] buffs;
         private static System.Random rnd = new System.Random();
@@ -55,13 +52,12 @@ namespace PlugInChipsMod.Scripts
             On.RoR2.GlobalEventManager.OnHitEnemy += superOffensive;
             On.RoR2.CharacterBody.OnTakeDamageServer += superAntiChain;
             On.RoR2.CharacterBody.OnSkillActivated += superShockwave;
-            //On.RoR2.CharacterBody.RemoveBuff_BuffDef += SwapBuffs;
             Stage.onStageStartGlobal += RestartBuff;
             On.RoR2.CharacterBody.OnInventoryChanged += Detect;
             On.RoR2.CharacterBody.OnBuffFinalStackLost += CycleBuffs;
             Run.onRunStartGlobal += Reset;
         }
-
+        //Resets buff values to default at the beginning of every run to avoid bugs
         private void Reset(Run obj)
         {
             ActiveBuff1 = null;
@@ -69,7 +65,7 @@ namespace PlugInChipsMod.Scripts
             cooldownTime = 15f;
             buffTime = 30f;
         }
-
+        //Hook on buff lost to add the new buffs
         private void CycleBuffs(On.RoR2.CharacterBody.orig_OnBuffFinalStackLost orig, CharacterBody self, BuffDef buffDef)
         {
             if (self && buffDef)
@@ -89,7 +85,7 @@ namespace PlugInChipsMod.Scripts
             }
             orig(self, buffDef);
         }
-
+        //Hook to add the buff the first time character acquires the item in the run
         private void Detect(On.RoR2.CharacterBody.orig_OnInventoryChanged orig, CharacterBody self)
         {
             if (self)
@@ -103,7 +99,7 @@ namespace PlugInChipsMod.Scripts
             }
             orig(self);
         }
-
+        //Gives the local player the buffs at the beginning of each stage
         private void RestartBuff(Stage obj)
         {
             ActiveBuff1 = null;
@@ -117,26 +113,6 @@ namespace PlugInChipsMod.Scripts
                 return;
             }
         }
-
-        /*private void SwapBuffs(On.RoR2.CharacterBody.orig_RemoveBuff_BuffDef orig, CharacterBody self, BuffDef buffDef)
-        {
-            if (self && buffDef)
-            {
-                if (buffDef == cooldown)
-                {
-                    GetCurrentBuffs();
-                    self.AddTimedBuff(ActiveBuff1, buffTime);
-                    self.AddTimedBuff(ActiveBuff2, buffTime);
-                }
-                else if (buffDef == ActiveBuff1 || buffDef == ActiveBuff2)
-                {
-                    self.AddTimedBuff(cooldown, buffTime);
-                    ActiveBuff1 = null;
-                    ActiveBuff2 = null;
-                }
-            }
-            orig(self, buffDef);
-        }*/
 
         private void superShockwave(On.RoR2.CharacterBody.orig_OnSkillActivated orig, CharacterBody self, GenericSkill skill)
         {
@@ -249,7 +225,7 @@ namespace PlugInChipsMod.Scripts
                 }
             }
         }
-
+        //Randomly acquires two different buffs
         private static void GetCurrentBuffs()
         {
             ActiveBuff1 = buffs[rnd.Next(0, 5)];
@@ -289,7 +265,7 @@ namespace PlugInChipsMod.Scripts
                 itemDef1 = tauntUp,
                 itemDef2 = osChip
             };
-
+            //This method comes from Utilities but it simply adds it to the array in the dictionary
             InitializeCorruptedItem(conversions);
         }
     }

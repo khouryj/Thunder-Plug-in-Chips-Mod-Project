@@ -48,7 +48,7 @@ namespace PlugInChipsMod.Scripts
 
         private bool CheckEquipment(On.RoR2.EquipmentSlot.orig_PerformEquipmentAction orig, EquipmentSlot self, EquipmentDef equipmentDef)
         {
-            if (equipmentDef == base.equipmentDef) { return UseEquipment(self); }
+            if (equipmentDef == this.equipmentDef) { return UseEquipment(self); }
             return orig(self, equipmentDef);
         }
 

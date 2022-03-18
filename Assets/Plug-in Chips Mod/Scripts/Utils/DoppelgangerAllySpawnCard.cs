@@ -7,6 +7,8 @@ using System;
 
 namespace PlugInChipsMod.Scripts
 {
+    //Used to create doppelganger spawns for lunar tear equipment
+    //This is simply RoR2.Artifacts.DoppelgangerSpawnCard but without making the player team a target in the prespawnsetupcallback method and I gave them damageboost items
     public class DoppelgangerAllySpawnCard : CharacterSpawnCard
     {
         private CharacterMaster cm;

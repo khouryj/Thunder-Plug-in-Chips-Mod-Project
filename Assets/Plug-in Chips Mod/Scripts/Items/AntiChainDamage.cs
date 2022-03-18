@@ -21,10 +21,8 @@ namespace PlugInChipsMod.Scripts
 
         public override void Init(ConfigFile config)
         {
-            base.itemDef = serializeableContentPack.itemDefs[0];
+            itemDef = serializeableContentPack.itemDefs[0];
             hiddenCooldown = serializeableContentPack.buffDefs[4];
-
-            PlugInChips.instance.Logger.LogMessage("Initializing Anti-Chain Damage");
 
             SetupConfig(config);
             SetupLanguage();
@@ -41,7 +39,7 @@ namespace PlugInChipsMod.Scripts
         {
             On.RoR2.CharacterBody.OnTakeDamageServer += Invulnerability;
         }
-
+        //Hook on taking damage to add immune buff and cooldown debuff
         private void Invulnerability(On.RoR2.CharacterBody.orig_OnTakeDamageServer orig, CharacterBody self, DamageReport damageReport)
         {
             orig(self, damageReport);

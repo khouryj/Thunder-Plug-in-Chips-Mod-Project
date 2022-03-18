@@ -17,6 +17,7 @@ namespace PlugInChipsMod.Scripts
         public static ItemDef shockwave;
         public static ItemDef osChip;
         public static ItemDef IronPipe;
+        public static ItemDef VirtuousContract;
 
         public static BuffDef SuperTaunt;
         public static BuffDef SuperDeadlyHeal;
@@ -35,6 +36,7 @@ namespace PlugInChipsMod.Scripts
             shockwave = serializeableContentPack.itemDefs[3];
             osChip = serializeableContentPack.itemDefs[5];
             IronPipe = serializeableContentPack.itemDefs[6];
+            VirtuousContract = serializeableContentPack.itemDefs[7];
 
             Taunted = serializeableContentPack.buffDefs[2];
             SuperTaunt = serializeableContentPack.buffDefs[5];

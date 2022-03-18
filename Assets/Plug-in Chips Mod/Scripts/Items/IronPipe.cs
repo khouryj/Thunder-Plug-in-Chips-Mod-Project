@@ -32,6 +32,7 @@ namespace PlugInChipsMod.Scripts
 
         private void HealthComponent_TakeDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
         {
+            //This line is to avoid NREs and ungodly projectile explosions if the attacker does not have a valid characterbody, i.e. tar pot explosion/elite projectiles
             CharacterBody cb = damageInfo.attacker?.GetComponent<CharacterBody>() ? damageInfo.attacker.GetComponent<CharacterBody>() : null;
             if (!cb.inventory)
             {
@@ -47,7 +48,7 @@ namespace PlugInChipsMod.Scripts
             else if (damageInfo.crit)
             {
                 damageInfo.damage *= 1.05f + (.05f * (count - 1));
-                if (Util.CheckRoll(5f + (3f * (count - 1)), cb.master.luck, cb.master))
+                if (Util.CheckRoll(5f + (3f * (count - 1)), cb.master.luck, cb.master)) //finally learned to use checkroll
                 {
                     damageInfo.damage *= 2;
                     damageInfo.damageColorIndex = DamageColorIndex.SuperBleed;

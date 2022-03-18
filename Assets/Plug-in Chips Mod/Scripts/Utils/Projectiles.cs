@@ -9,6 +9,7 @@ using RoR2.Projectile;
 
 namespace PlugInChipsMod.Scripts
 {
+    //Temporarily have this for R2API to load my projectile; using my own contentpack soon(tm)
     public class Projectiles
     {
         public static GameObject shockwaveProjectile;

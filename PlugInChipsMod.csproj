@@ -69,6 +69,7 @@
      <Compile Include="Assets\Plug-in Chips Mod\Scripts\Items\OffensiveHeal.cs" />
      <Compile Include="Assets\Plug-in Chips Mod\Scripts\Items\Shockwave.cs" />
      <Compile Include="Assets\Plug-in Chips Mod\Scripts\Items\TauntUp.cs" />
+     <Compile Include="Assets\Plug-in Chips Mod\Scripts\Items\VirtuousContract.cs" />
      <Compile Include="Assets\Plug-in Chips Mod\Scripts\Utils\DoppelgangerAllySpawnCard.cs" />
      <Compile Include="Assets\Plug-in Chips Mod\Scripts\Utils\Projectiles.cs" />
      <Compile Include="Assets\Plug-in Chips Mod\Scripts\Utils\Utilities.cs" />
