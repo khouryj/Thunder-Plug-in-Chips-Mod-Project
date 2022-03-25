@@ -22,6 +22,7 @@ namespace PlugInChipsMod.Scripts
             serializeableContentPack.buffDefs[8].name = "SUPERCHARGED Anti-Chain Damage";
             serializeableContentPack.buffDefs[9].name = "SUPERCHARGED Shockwave";
             serializeableContentPack.buffDefs[10].name = "OS Chip Cooldown";
+            serializeableContentPack.buffDefs[11].name = "Logic Virus";
         }
     }
 }

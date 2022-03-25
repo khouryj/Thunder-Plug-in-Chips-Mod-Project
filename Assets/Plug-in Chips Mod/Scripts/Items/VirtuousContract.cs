@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using RoR2;
+using R2API.Utils;
 
 namespace PlugInChipsMod.Scripts
 {
@@ -37,18 +38,30 @@ namespace PlugInChipsMod.Scripts
 
         protected override void SetupHooks()
         {
-            RoR2.GlobalEventManager.onServerDamageDealt += GlobalEventManager_onServerDamageDealt;
+            On.RoR2.GlobalEventManager.OnHitEnemy += GlobalEventManager_OnHitEnemy;
         }
-        //Event subscription that adds damage if health is full
-        private void GlobalEventManager_onServerDamageDealt(RoR2.DamageReport obj)
+        //hook that actually works this time
+        private void GlobalEventManager_OnHitEnemy(On.RoR2.GlobalEventManager.orig_OnHitEnemy orig, GlobalEventManager self, DamageInfo damageInfo, GameObject victim)
         {
-            if (obj.attackerBody && obj.attackerBody.inventory && !obj.isFallDamage)
+            CharacterBody cb;
+            try
             {
-                if (obj.attackerBody.inventory.GetItemCount(itemDef) > 0 && obj.attackerBody.healthComponent.health >= obj.attackerBody.healthComponent.fullHealth)
+                cb = damageInfo.attacker.GetComponent<CharacterBody>();
+            }
+            catch
+            {
+                orig(self, damageInfo, victim);
+                return;
+            }
+
+            if (cb && cb.inventory)
+            {
+                if (cb.inventory.GetItemCount(itemDef) > 0 && cb.healthComponent.health >= cb.healthComponent.fullHealth)
                 {
-                    obj.damageDealt *= (1 + (damage + (increments * (obj.attackerBody.inventory.GetItemCount(itemDef) - 1))));
+                    damageInfo.damage *= (1 + (damage + (increments * (cb.inventory.GetItemCount(itemDef) - 1))));
                 }
             }
+            orig(self, damageInfo, victim);
         }
     }
 }

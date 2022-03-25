@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1284244208, guid: 4fb18dee00b225346a4b0d283ac6fd69, type: 3}
+  m_Name: VirtuousContract
+  m_EditorClassIdentifier: 
+  _itemIndex: -1
+  tier: 0
+  nameToken: ITEM_VIRTUOUS_CONTRACT_NAME
+  pickupToken: ITEM_VIRTUOUS_CONTRACT_PICKUP
+  descriptionToken: ITEM_VIRTUOUS_CONTRACT_DESC
+  loreToken: ITEM_VIRTUOUS_CONTRACT_LORE
+  unlockableDef: {fileID: 0}
+  pickupModelPrefab: {fileID: 1997910263043290765, guid: f0efeb25e191d78479a0a4eae28aef2a,
+    type: 3}
+  pickupIconSprite: {fileID: 0}
+  hidden: 0
+  canRemove: 1
+  tags: 01000000
+  requiredExpansion: {fileID: 0}

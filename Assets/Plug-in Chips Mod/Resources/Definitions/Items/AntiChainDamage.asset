@@ -9,9 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1284244208, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+  m_Script: {fileID: -1284244208, guid: 4fb18dee00b225346a4b0d283ac6fd69, type: 3}
   m_Name: AntiChainDamage
   m_EditorClassIdentifier: 
+  _itemIndex: -1
   tier: 2
   nameToken: ITEM_ANTI-CHAIN_DAMAGE_NAME
   pickupToken: ITEM_ANTI-CHAIN_DAMAGE_PICKUP

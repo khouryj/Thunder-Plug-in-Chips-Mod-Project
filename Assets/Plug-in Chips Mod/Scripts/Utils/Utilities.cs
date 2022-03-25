@@ -18,6 +18,7 @@ namespace PlugInChipsMod.Scripts
         public static ItemDef osChip;
         public static ItemDef IronPipe;
         public static ItemDef VirtuousContract;
+        public static ItemDef VirtuousTreaty;
 
         public static BuffDef SuperTaunt;
         public static BuffDef SuperDeadlyHeal;
@@ -26,6 +27,7 @@ namespace PlugInChipsMod.Scripts
         public static BuffDef SuperShockwave;
         public static BuffDef cooldown;
         public static BuffDef Taunted;
+        public static BuffDef LogicVirus;
 
         public static void Init()
         {
@@ -37,6 +39,7 @@ namespace PlugInChipsMod.Scripts
             osChip = serializeableContentPack.itemDefs[5];
             IronPipe = serializeableContentPack.itemDefs[6];
             VirtuousContract = serializeableContentPack.itemDefs[7];
+            VirtuousTreaty = serializeableContentPack.itemDefs[8];
 
             Taunted = serializeableContentPack.buffDefs[2];
             SuperTaunt = serializeableContentPack.buffDefs[5];
@@ -45,6 +48,7 @@ namespace PlugInChipsMod.Scripts
             SuperAntiChain = serializeableContentPack.buffDefs[8];
             SuperShockwave = serializeableContentPack.buffDefs[9];
             cooldown = serializeableContentPack.buffDefs[10];
+            LogicVirus = serializeableContentPack.buffDefs[11];
         }
 
         public static void InitializeCorruptedItem(ItemDef.Pair[] pairs)

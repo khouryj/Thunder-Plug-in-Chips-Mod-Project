@@ -9,16 +9,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1512808244, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+  m_Script: {fileID: 1512808244, guid: 4fb18dee00b225346a4b0d283ac6fd69, type: 3}
   m_Name: LunarTear
   m_EditorClassIdentifier: 
+  _equipmentIndex: -1
   pickupModelPrefab: {fileID: 4717634114774916654, guid: 6471868a59f747f409bbbae9968100fb,
     type: 3}
   cooldown: 120
-  nameToken: ITEM_LUNAR_TEAR_NAME
-  pickupToken: ITEM_LUNAR_TEAR_PICKUP
-  descriptionToken: ITEM_LUNAR_TEAR_DESC
-  loreToken: ITEM_LUNAR_TEAR_LORE
+  nameToken: EQUIPMENT_LUNAR_TEAR_NAME
+  pickupToken: EQUIPMENT_LUNAR_TEAR_PICKUP
+  descriptionToken: EQUIPMENT_LUNAR_TEAR_DESC
+  loreToken: EQUIPMENT_LUNAR_TEAR_LORE
   pickupIconSprite: {fileID: 21300000, guid: 43c6ac4ba11eb9848b85f9d9ec683b43, type: 3}
   unlockableDef: {fileID: 0}
   colorIndex: 4

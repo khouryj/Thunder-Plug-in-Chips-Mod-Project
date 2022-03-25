@@ -230,7 +230,7 @@ namespace PlugInChipsMod.Scripts
         {
             ActiveBuff1 = buffs[rnd.Next(0, 5)];
             ActiveBuff2 = buffs[rnd.Next(0, 5)];
-            while (ActiveBuff2 == ActiveBuff1) { ActiveBuff2 = buffs[rnd.Next(0, 4)]; }
+            while (ActiveBuff2 == ActiveBuff1) { ActiveBuff2 = buffs[rnd.Next(0, 5)]; }
             PlugInChips.instance.Logger.LogMessage("buffs selected: " + ActiveBuff1.name + ", " + ActiveBuff2.name);
         }
 

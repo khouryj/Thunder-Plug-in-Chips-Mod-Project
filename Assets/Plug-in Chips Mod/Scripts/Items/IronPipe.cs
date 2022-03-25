@@ -34,7 +34,7 @@ namespace PlugInChipsMod.Scripts
         {
             //This line is to avoid NREs and ungodly projectile explosions if the attacker does not have a valid characterbody, i.e. tar pot explosion/elite projectiles
             CharacterBody cb = damageInfo.attacker?.GetComponent<CharacterBody>() ? damageInfo.attacker.GetComponent<CharacterBody>() : null;
-            if (!cb.inventory)
+            if (!damageInfo.attacker || !cb || !cb.inventory)
             {
                 orig(self, damageInfo);
                 return;
@@ -45,7 +45,7 @@ namespace PlugInChipsMod.Scripts
                 orig(self, damageInfo);
                 return;
             }
-            else if (damageInfo.crit)
+            if (damageInfo.crit)
             {
                 damageInfo.damage *= 1.05f + (.05f * (count - 1));
                 if (Util.CheckRoll(5f + (3f * (count - 1)), cb.master.luck, cb.master)) //finally learned to use checkroll

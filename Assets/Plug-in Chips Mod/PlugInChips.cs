@@ -40,6 +40,7 @@ namespace PlugInChipsMod
         private bool load = true;
         public static PlugInChips instance;
         public static Harmony harmony;
+        private static string DefaultModVer = "0.0.0", CurrentModVer = MODVERSION;
 
         public static Dictionary<string, string> ShaderLookup = new Dictionary<string, string>()
     {
@@ -87,12 +88,12 @@ namespace PlugInChipsMod
 
         private void GrabContentPack()
         {
-            Logger.LogMessage("Grabbing Content Pack");
+            //Logger.LogMessage("Grabbing Content Pack");
             serializeableContentPack = assetBundle.LoadAsset<SerializableContentPack>("PlugInChipsContentPack");
             contentPack = serializeableContentPack.CreateContentPack();
             ContentPackProvider.contentPack = contentPack;
         }
-
+        //From komradesprectre
         private static void ShaderConversion(AssetBundle assets)
         {
             var materialAssets = assets.LoadAllAssets<Material>().Where(material => material.shader.name.StartsWith("Stubbed"));

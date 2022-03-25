@@ -55,7 +55,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\AllowPublicized.cs" />
+     <Compile Include="Assets\sus.cs" />
      <None Include="Assets\shaders\postprocess\hgsobelbuffer.shader" />
      <None Include="Assets\shaders\ui\hguicustomblend.shader" />
      <None Include="Assets\shaders\fx\hgforwardplanet.shader" />
@@ -263,6 +263,15 @@
  </Reference>
  <Reference Include="UnityEditor">
  <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
+ </Reference>
+ <Reference Include="RoR2">
+ <HintPath>C:/Users/boseph/Documents/Unity Projects/Thunder-Plug-in Chips Mod Project/Packages/Risk of Rain 2/RoR2.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEngine.UI">
+ <HintPath>C:/Users/boseph/Documents/Unity Projects/Thunder-Plug-in Chips Mod Project/Packages/Risk of Rain 2/UnityEngine.UI.dll</HintPath>
+ </Reference>
+ <Reference Include="MMHOOK_RoR2">
+ <HintPath>C:/Users/boseph/Documents/Unity Projects/Thunder-Plug-in Chips Mod Project/Packages/HookGenPatcher/BepInEx/plugins/MMHOOK/MMHOOK_RoR2.dll</HintPath>
  </Reference>
  <Reference Include="netstandard">
  <HintPath>C:/Program Files/Unity/Editor/Data/NetStandard/ref/2.0.0/netstandard.dll</HintPath>
@@ -624,12 +633,6 @@
  <Reference Include="ThunderKit.Thunderstore">
  <HintPath>C:/Users/boseph/Documents/Unity Projects/Thunder-Plug-in Chips Mod Project/Library/ScriptAssemblies/ThunderKit.Thunderstore.dll</HintPath>
  </Reference>
- <Reference Include="Unity.TextMeshPro.Editor">
- <HintPath>C:/Users/boseph/Documents/Unity Projects/Thunder-Plug-in Chips Mod Project/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
- </Reference>
- <Reference Include="UnityEngine.UI">
- <HintPath>C:/Users/boseph/Documents/Unity Projects/Thunder-Plug-in Chips Mod Project/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
- </Reference>
  <Reference Include="ThunderKit.Markdown">
  <HintPath>C:/Users/boseph/Documents/Unity Projects/Thunder-Plug-in Chips Mod Project/Library/ScriptAssemblies/ThunderKit.Markdown.dll</HintPath>
  </Reference>
@@ -648,20 +651,14 @@
  <Reference Include="Unity.ScriptableBuildPipeline">
  <HintPath>C:/Users/boseph/Documents/Unity Projects/Thunder-Plug-in Chips Mod Project/Library/ScriptAssemblies/Unity.ScriptableBuildPipeline.dll</HintPath>
  </Reference>
- <Reference Include="Unity.TextMeshPro">
- <HintPath>C:/Users/boseph/Documents/Unity Projects/Thunder-Plug-in Chips Mod Project/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
- </Reference>
  <Reference Include="ThunderKit.Common">
  <HintPath>C:/Users/boseph/Documents/Unity Projects/Thunder-Plug-in Chips Mod Project/Library/ScriptAssemblies/ThunderKit.Common.dll</HintPath>
  </Reference>
- <Reference Include="UnityEditor.UI">
- <HintPath>C:/Users/boseph/Documents/Unity Projects/Thunder-Plug-in Chips Mod Project/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
- </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="PlugInChipsReferences.csproj">
-      <Project>{B11F5D03-942E-2142-383B-E5480AE11317}</Project>
-      <Name>PlugInChipsReferences</Name>
+    <ProjectReference Include="PlugInChipsMod.csproj">
+      <Project>{1F91BC7C-9A06-A43B-FF2B-ACDF0411E58F}</Project>
+      <Name>PlugInChipsMod</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -15,7 +15,12 @@
       "ProjectGuid": "1f91bc7c-9a06-a43b-ff2b-acdf0411e58f",
       "DisplayName": "PlugInChipsMod",
       "ColorIndex": 1
+    },
+    "6c64696a-764b-9357-6881-cf226425479b": {
+      "ProjectGuid": "6c64696a-764b-9357-6881-cf226425479b",
+      "DisplayName": "sus",
+      "ColorIndex": 2
     }
   },
-  "NextColorIndex": 2
+  "NextColorIndex": 3
 }

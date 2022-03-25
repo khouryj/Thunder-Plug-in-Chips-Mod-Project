@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -281164913, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+  m_Script: {fileID: -281164913, guid: 4fb18dee00b225346a4b0d283ac6fd69, type: 3}
   m_Name: PlugInChipsContentPack
   m_EditorClassIdentifier: 
   bodyPrefabs: []
@@ -29,6 +29,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 6c9717fd382f9114488fee9534a93741, type: 2}
   - {fileID: 11400000, guid: 72ba9221f4ebfb244ab5dae2c8f17f12, type: 2}
   - {fileID: 11400000, guid: b68af89a89301b04cbabfed2e9fddaf5, type: 2}
+  - {fileID: 11400000, guid: 0ba891f5e9baa8f4b9fea360c474ee17, type: 2}
   equipmentDefs:
   - {fileID: 11400000, guid: 8d8d153baf9627043b5f97e1ef119eed, type: 2}
   - {fileID: 11400000, guid: 03c4b64f3982813499c037169ab52521, type: 2}
@@ -44,6 +45,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9cff4602df167ec48bbae778731887f7, type: 2}
   - {fileID: 11400000, guid: 792fb87f4a5f0e946ab20dcfd5389d52, type: 2}
   - {fileID: 11400000, guid: aa5448562783829428deb666e2f1a9d1, type: 2}
+  - {fileID: 11400000, guid: b8b1bda55ae7c4244b38a2c8748c9f75, type: 2}
   eliteDefs: []
   unlockableDefs: []
   survivorDefs: []
