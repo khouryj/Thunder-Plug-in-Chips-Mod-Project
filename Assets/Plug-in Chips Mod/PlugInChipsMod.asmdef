@@ -7,13 +7,12 @@
     "overrideReferences": true,
     "precompiledReferences": [
         "RoR2.dll",
-        "0Harmony.dll",
         "BepInEx.dll",
         "R2API.dll",
+        "MMHOOK_RoR2.dll",
         "LegacyResourcesAPI.dll",
         "HGCSharpUtils.dll",
-        "com.unity.multiplayer-hlapi.Runtime.dll",
-        "MMHOOK_RoR2.dll"
+        "com.unity.multiplayer-hlapi.Runtime.dll"
     ],
     "autoReferenced": false,
     "defineConstraints": [],

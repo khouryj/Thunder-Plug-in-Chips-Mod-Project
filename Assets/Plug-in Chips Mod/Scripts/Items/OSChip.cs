@@ -6,14 +6,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using static PlugInChipsMod.Scripts.Utilities;
 using static PlugInChipsMod.PlugInChips;
-using HarmonyLib;
 using RoR2.Items;
 using System;
 using RoR2.Projectile;
 
 namespace PlugInChipsMod.Scripts
 {
-    [HarmonyPatch]
     public class OSChip : CustomItem<OSChip>
     {
         public override string Name => "OS Chip";
@@ -24,7 +22,6 @@ namespace PlugInChipsMod.Scripts
         public override bool dlcRequired => true;
         //ItemDef.Pair array used to add void conversions to the dictionary in the base game
         private static ItemDef.Pair[] conversions;
-        private static Harmony harmony = PlugInChips.harmony;
         //variables used for handling buffs
         private static BuffDef ActiveBuff1, ActiveBuff2;
         private static BuffDef[] buffs;
@@ -56,7 +53,42 @@ namespace PlugInChipsMod.Scripts
             On.RoR2.CharacterBody.OnInventoryChanged += Detect;
             On.RoR2.CharacterBody.OnBuffFinalStackLost += CycleBuffs;
             Run.onRunStartGlobal += Reset;
+            On.RoR2.Items.ContagiousItemManager.Init += InitCorrupted;
         }
+
+        private void InitCorrupted(On.RoR2.Items.ContagiousItemManager.orig_Init orig)
+        {
+            conversions = new ItemDef.Pair[5];
+            conversions[0] = new ItemDef.Pair
+            {
+                itemDef1 = deadlyHeal,
+                itemDef2 = osChip
+            };
+            conversions[1] = new ItemDef.Pair
+            {
+                itemDef1 = shockwave,
+                itemDef2 = osChip
+            };
+            conversions[2] = new ItemDef.Pair
+            {
+                itemDef1 = antiChainDamage,
+                itemDef2 = osChip
+            };
+            conversions[3] = new ItemDef.Pair
+            {
+                itemDef1 = offensiveHeal,
+                itemDef2 = osChip
+            };
+            conversions[4] = new ItemDef.Pair
+            {
+                itemDef1 = tauntUp,
+                itemDef2 = osChip
+            };
+            //This method comes from Utilities but it simply adds it to the array in the dictionary
+            InitializeCorruptedItem(conversions);
+            orig();
+        }
+
         //Resets buff values to default at the beginning of every run to avoid bugs
         private void Reset(Run obj)
         {
@@ -232,41 +264,6 @@ namespace PlugInChipsMod.Scripts
             ActiveBuff2 = buffs[rnd.Next(0, 5)];
             while (ActiveBuff2 == ActiveBuff1) { ActiveBuff2 = buffs[rnd.Next(0, 5)]; }
             PlugInChips.instance.Logger.LogMessage("buffs selected: " + ActiveBuff1.name + ", " + ActiveBuff2.name);
-        }
-
-
-        //Bubbet is the only one i have seen make a void item so far so this code is "borrowed" from him
-        [HarmonyPrefix, HarmonyPatch(typeof(ContagiousItemManager), nameof(ContagiousItemManager.Init))]
-        public static void CorruptedItems()
-        {
-            conversions = new ItemDef.Pair[5];
-            conversions[0] = new ItemDef.Pair
-            {
-                itemDef1 = deadlyHeal,
-                itemDef2 = osChip
-            };
-            conversions[1] = new ItemDef.Pair
-            {
-                itemDef1 = shockwave,
-                itemDef2 = osChip
-            };
-            conversions[2] = new ItemDef.Pair
-            {
-                itemDef1 = antiChainDamage,
-                itemDef2 = osChip
-            };
-            conversions[3] = new ItemDef.Pair
-            {
-                itemDef1 = offensiveHeal,
-                itemDef2 = osChip
-            };
-            conversions[4] = new ItemDef.Pair
-            {
-                itemDef1 = tauntUp,
-                itemDef2 = osChip
-            };
-            //This method comes from Utilities but it simply adds it to the array in the dictionary
-            InitializeCorruptedItem(conversions);
         }
     }
 }

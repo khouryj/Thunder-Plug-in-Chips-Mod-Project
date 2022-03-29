@@ -38,30 +38,21 @@ namespace PlugInChipsMod.Scripts
 
         protected override void SetupHooks()
         {
-            On.RoR2.GlobalEventManager.OnHitEnemy += GlobalEventManager_OnHitEnemy;
+            On.RoR2.HealthComponent.TakeDamage += HealthComponent_TakeDamage;
         }
-        //hook that actually works this time
-        private void GlobalEventManager_OnHitEnemy(On.RoR2.GlobalEventManager.orig_OnHitEnemy orig, GlobalEventManager self, DamageInfo damageInfo, GameObject victim)
+        //No joke, this hook works for real this time
+        private void HealthComponent_TakeDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
         {
-            CharacterBody cb;
-            try
-            {
-                cb = damageInfo.attacker.GetComponent<CharacterBody>();
-            }
-            catch
-            {
-                orig(self, damageInfo, victim);
-                return;
-            }
-
+            CharacterBody cb = damageInfo?.attacker?.GetComponent<CharacterBody>();
             if (cb && cb.inventory)
             {
-                if (cb.inventory.GetItemCount(itemDef) > 0 && cb.healthComponent.health >= cb.healthComponent.fullHealth)
+                if (cb.inventory.GetItemCount(itemDef) > 0 && cb.healthComponent?.health >= cb.healthComponent?.fullHealth)
                 {
                     damageInfo.damage *= (1 + (damage + (increments * (cb.inventory.GetItemCount(itemDef) - 1))));
+                    PlugInChips.instance.Logger.LogMessage("Damage applied");
                 }
             }
-            orig(self, damageInfo, victim);
+            orig(self, damageInfo);
         }
     }
 }

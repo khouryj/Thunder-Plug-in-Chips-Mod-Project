@@ -45,7 +45,7 @@ namespace PlugInChipsMod.Scripts
                 orig(self, damageInfo);
                 return;
             }
-            if (damageInfo.crit)
+            if (damageInfo.crit || damageInfo.damageType == DamageType.WeakPointHit)
             {
                 damageInfo.damage *= 1.05f + (.05f * (count - 1));
                 if (Util.CheckRoll(5f + (3f * (count - 1)), cb.master.luck, cb.master)) //finally learned to use checkroll

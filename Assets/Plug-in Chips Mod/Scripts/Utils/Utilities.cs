@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using HarmonyLib;
 using RoR2;
 using static PlugInChipsMod.PlugInChips;
 
 namespace PlugInChipsMod.Scripts
 {
-    public class Utilities
+    public static class Utilities
     {
         public static ItemDef offensiveHeal;
         public static ItemDef deadlyHeal;
@@ -50,10 +49,13 @@ namespace PlugInChipsMod.Scripts
             cooldown = serializeableContentPack.buffDefs[10];
             LogicVirus = serializeableContentPack.buffDefs[11];
         }
+        //Borrowed from harmony because it was breaking my build, this isnt mine at all I dont even understand this
+        public static T[] AddRangeToArray<T>(this T[] sequence, T[] items) => (sequence ?? Enumerable.Empty<T>()).Concat<T>(items).ToArray<T>();
 
         public static void InitializeCorruptedItem(ItemDef.Pair[] pairs)
         {
             ItemCatalog.itemRelationships[DLC1Content.ItemRelationshipTypes.ContagiousItem] = ItemCatalog.itemRelationships[DLC1Content.ItemRelationshipTypes.ContagiousItem].AddRangeToArray(pairs);
+
         }
     }
 }

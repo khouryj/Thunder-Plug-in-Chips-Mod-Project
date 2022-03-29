@@ -7,13 +7,13 @@ using R2API.Utils;
 using R2API;
 using System.Reflection;
 using System;
-using HarmonyLib;
 using System.Linq;
 using PlugInChipsMod.Scripts;
 using ChipsItem = PlugInChipsMod.Scripts.CustomItem;
 using ChipsEquipment = PlugInChipsMod.Scripts.CustomEquipment;
 using Path = System.IO.Path;
 using RoR2;
+using BepInEx.Configuration;
 
 namespace PlugInChipsMod
 {
@@ -39,8 +39,7 @@ namespace PlugInChipsMod
 
         private bool load = true;
         public static PlugInChips instance;
-        public static Harmony harmony;
-        private static string DefaultModVer = "0.0.0", CurrentModVer = MODVERSION;
+        public ConfigEntry<string> CurrentModVer;
 
         public static Dictionary<string, string> ShaderLookup = new Dictionary<string, string>()
     {
@@ -58,19 +57,29 @@ namespace PlugInChipsMod
         {
             instance = this;
             Logger = base.Logger;
-            harmony = new Harmony(MODGUID);
 
             LoadAssetBundle();
             if (!load) { Logger.LogMessage("Failed to load in assetbundle, check file name/path."); return; }
+            
+            CurrentModVer = Config.Bind<string>("MOD VERSION: " + MODVERSION, "Mod Version Number", "0.0.0", "Utility used to reset configs when needed, DO NOT CHANGE!");
+            if (CurrentModVer.Value == "0.0.0")
+            {
+                ResetConfig();
+            }
 
             Projectiles.Init();
             Buffs.Init();
-            Utilities.Init();
+            PlugInChipsMod.Scripts.Utilities.Init();
 
             ContentPackProvider.Init(); //i hecking love content packs
             ChipsItem.InitializeItems();
             ChipsEquipment.InitializeEquipment();
-            harmony.PatchAll();
+        }
+
+        private void ResetConfig()
+        {
+            Config.Clear();
+            CurrentModVer.Value = MODVERSION;
         }
 
         private void LoadAssetBundle()
