@@ -31,10 +31,14 @@ namespace PlugInChipsMod.Scripts
         }
 
         private void HealthComponent_TakeDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
-        {
-            //This line is to avoid NREs and ungodly projectile explosions if the attacker does not have a valid characterbody, i.e. tar pot explosion/elite projectiles
-            CharacterBody cb = damageInfo.attacker?.GetComponent<CharacterBody>() ? damageInfo.attacker.GetComponent<CharacterBody>() : null;
-            if (!damageInfo.attacker || !cb || !cb.inventory)
+        { 
+            if (!damageInfo?.attacker)
+            {
+                orig(self, damageInfo);
+                return;
+            }
+            CharacterBody cb = damageInfo.attacker.GetCharacterBody();
+            if (!cb || !cb.inventory)
             {
                 orig(self, damageInfo);
                 return;
