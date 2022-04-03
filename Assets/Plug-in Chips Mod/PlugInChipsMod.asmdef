@@ -12,7 +12,8 @@
         "MMHOOK_RoR2.dll",
         "LegacyResourcesAPI.dll",
         "HGCSharpUtils.dll",
-        "com.unity.multiplayer-hlapi.Runtime.dll"
+        "com.unity.multiplayer-hlapi.Runtime.dll",
+        "Unity.TextMeshPro.dll"
     ],
     "autoReferenced": false,
     "defineConstraints": [],

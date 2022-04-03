@@ -55,7 +55,6 @@ namespace PlugInChipsMod.Scripts
                 }
                 catch (NullReferenceException NRE)
                 {
-                    PlugInChips.instance.Logger.LogWarning("GameObject does not have a valid characterbody");
                     orig(self, damageInfo);
                     return;
                 }

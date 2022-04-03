@@ -11,11 +11,10 @@ namespace PlugInChipsMod.Scripts
     {
         public override string Name => "Virtuous Treaty";
         public override string Pickup => "Hit enemies to apply quickly-decaying stacks of logic virus. Full stacks damages enemies instantly.";
-        public override string Desc => "On hit, enemies will gain 1 stack of logic virus. Building up 30 stacks of logic virus will cause the enemy to short-circuit, taking 20% of their current COMBINED health as damage. The enemy will lose 10 stacks of logic virus every 5 seconds.";
+        public override string Desc => "On hit, enemies will have a <style=cIsUtility>50% * Proc Coefficient</style> chance to gain 1 stack of <style=cDeath>logic virus</style>. Building up 25 stacks of logic virus will cause the enemy to <style=cIsUtility>short-circuit</style>, taking <style=cIsDamage>20%</style> <style=cStack>+10% per stack</style> of their current COMBINED health as damage. The enemy will lose all stacks of logic virus every <style=cIsUtility>8 seconds.</style>";
         public override string Lore => "";
 
         private BuffDef logicVirus;
-        private int count;
 
         public override void Init(ConfigFile config)
         {
@@ -29,72 +28,41 @@ namespace PlugInChipsMod.Scripts
         protected override void SetupHooks()
         {
             On.RoR2.GlobalEventManager.OnHitEnemy += ApplyVirus;
-            On.RoR2.CharacterBody.OnBuffFinalStackLost += LoseStacks;
-            On.RoR2.CharacterBody.SetBuffCount += SaveStacks;
-        }
-
-        private void SaveStacks(On.RoR2.CharacterBody.orig_SetBuffCount orig, CharacterBody self, BuffIndex buffType, int newCount)
-        {
-            if (buffType == logicVirus.buffIndex && newCount == 0)
-            {
-                if (self)
-                {
-                    count = self.GetBuffCount(logicVirus);
-                    PlugInChips.instance.Logger.LogMessage("count saved");
-                }
-            }
-            orig(self, buffType, newCount);
-        }
-
-        private void LoseStacks(On.RoR2.CharacterBody.orig_OnBuffFinalStackLost orig, CharacterBody self, BuffDef buffDef)
-        {
-            if (buffDef == logicVirus)
-            {
-                if (self)
-                {
-                    orig(self, buffDef);
-                    if (count >= 11 && count != 30)
-                    {
-                        self.AddTimedBuff(buffDef, 5, 30);
-                        self.SetBuffCount(buffDef.buffIndex, count - 10);
-                        count = 0;
-                        PlugInChips.instance.Logger.LogMessage("buff reset");
-                    }
-                    return;
-                }
-            }
-            orig(self, buffDef);
         }
 
         private void ApplyVirus(On.RoR2.GlobalEventManager.orig_OnHitEnemy orig, GlobalEventManager self, DamageInfo damageInfo, GameObject victim)
         {
             orig(self, damageInfo, victim);
-            CharacterBody cb = damageInfo?.attacker?.GetComponent<CharacterBody>();
-            CharacterBody victimBody = victim?.GetComponent<CharacterBody>();
-            if (cb && victimBody && cb.inventory)
+            CharacterBody cb = damageInfo?.attacker.GetCharacterBody();
+            CharacterBody victimBody = victim.GetCharacterBody();
+            if (!cb || !victimBody) { return; }
+            if (cb.inventory.GetItemCount(itemDef) > 0)
             {
-                if (cb.inventory.GetItemCount(itemDef) > 0)
+                if (Util.CheckRoll((.5f * damageInfo.procCoefficient) * 100, cb.master))
                 {
-                    victimBody.AddTimedBuff(logicVirus, 5, 30);
+                    victimBody.AddTimedBuff(logicVirus, 8, 25);
                 }
-                if (victimBody.HasBuff(logicVirus))
+            }
+            if (victimBody.HasBuff(logicVirus))
+            {
+                if (victimBody.GetBuffCount(logicVirus) == 25)
                 {
-                    if (victimBody.GetBuffCount(logicVirus) == 30)
-                    {
-                        victimBody.healthComponent.TakeDamage(new DamageInfo { 
-                            attacker = cb.gameObject, 
-                            crit = false, 
-                            damage = .2f * victimBody.healthComponent.combinedHealth, 
-                            damageColorIndex = DamageColorIndex.Bleed,
-                            force = Vector3.zero,
-                            canRejectForce = false,
-                            damageType = DamageType.Generic,
-                            dotIndex = 0,
-                            inflictor = victim,
-                            rejected = false 
-                        });
-                        victimBody.SetBuffCount(logicVirus.buffIndex, 0);
-                    }
+                    victimBody.healthComponent.TakeDamage(new DamageInfo { 
+                        attacker = cb.gameObject, 
+                        crit = false, 
+                        damage = Utilities.CalculateChange(.2f, .1f, cb.inventory.GetItemCount(itemDef)) * victimBody.healthComponent.combinedHealth, 
+                        damageColorIndex = DamageColorIndex.Bleed,
+                        force = Vector3.zero,
+                        canRejectForce = false,
+                        damageType = DamageType.Generic,
+                        dotIndex = 0,
+                        inflictor = victim,
+                        position = victimBody.corePosition,
+                        procChainMask = default(ProcChainMask),
+                        procCoefficient = 0,
+                        rejected = false 
+                    });
+                    victimBody.ClearTimedBuffs(logicVirus);
                 }
             }
         }

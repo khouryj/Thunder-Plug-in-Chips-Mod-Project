@@ -30,6 +30,9 @@ namespace PlugInChipsMod.Scripts
         public abstract string Lore { get; }
 
         public virtual bool dlcRequired { get; } = false;
+        
+        public ConfigEntry<bool> enabled;
+        public ConfigEntry<bool> aiBlacklist;
 
         public ItemDef itemDef;
 
@@ -53,7 +56,11 @@ namespace PlugInChipsMod.Scripts
             foreach (var item in Items)
             {
                 CustomItem chipsItem = (CustomItem)Activator.CreateInstance(item);
+                EnableAndBlacklist(ref chipsItem);
+                if(!chipsItem.enabled.Value) { continue; }
+                if (chipsItem.aiBlacklist.Value) { chipsItem.itemDef.tags = chipsItem.itemDef.tags.AddRangeToArray(new ItemTag[]{ItemTag.AIBlacklist}); }
                 //PlugInChips.instance.Logger.LogMessage("Initializing Items...");
+                
                 chipsItem.Init(PlugInChips.instance.Config);
 
                 //From bubbet's itembase
@@ -62,6 +69,13 @@ namespace PlugInChipsMod.Scripts
                     chipsItem.itemDef.requiredExpansion = ExpansionCatalog.expansionDefs.FirstOrDefault(x => x.nameToken == "DLC1_NAME");
                 }
             }
+        }
+
+        private static void EnableAndBlacklist(ref CustomItem customItem)
+        {
+            string Name = customItem.Name == "Nier's Iron Pipe" ? "Iron Pipe" : customItem.Name;
+            customItem.enabled = PlugInChips.instance.Config.Bind<bool>("Item: " + Name, "Enabled?", true, "Should this item be enabled?");
+            customItem.aiBlacklist = PlugInChips.instance.Config.Bind<bool>("Item: " + Name, "AI Blacklist", false, "Should this item be restricted from AI in runs?");
         }
     }
 }

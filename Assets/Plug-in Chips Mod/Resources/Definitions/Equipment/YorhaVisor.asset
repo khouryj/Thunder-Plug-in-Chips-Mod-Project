@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1512808244, guid: 4fb18dee00b225346a4b0d283ac6fd69, type: 3}
+  m_Name: YorhaVisor
+  m_EditorClassIdentifier: 
+  _equipmentIndex: -1
+  pickupModelPrefab: {fileID: 5662716502365051467, guid: 9dc9e80fbe2c3c145a20e48b6c76fc49,
+    type: 3}
+  cooldown: 135
+  nameToken: EQUIPMENT_YORHA_VISOR_NAME
+  pickupToken: EQUIPMENT_YORHA_VISOR_PICKUP
+  descriptionToken: EQUIPMENT_YORHA_VISOR_DESC
+  loreToken: EQUIPMENT_YORHA_VISOR_LORE
+  pickupIconSprite: {fileID: 21300000, guid: 4a6c45b6eb5325541a5252e760342182, type: 3}
+  unlockableDef: {fileID: 0}
+  colorIndex: 5
+  canDrop: 0
+  dropOnDeathChance: 0
+  canBeRandomlyTriggered: 1
+  enigmaCompatible: 0
+  isLunar: 0
+  isBoss: 0
+  passiveBuffDef: {fileID: 0}
+  appearsInSinglePlayer: 1
+  appearsInMultiPlayer: 1
+  requiredExpansion: {fileID: 0}
+  mageElement: 0

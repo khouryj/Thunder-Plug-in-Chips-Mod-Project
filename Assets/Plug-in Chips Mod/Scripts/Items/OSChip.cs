@@ -158,7 +158,7 @@ namespace PlugInChipsMod.Scripts
                         FireProjectileInfo fireProjectileInfo = new FireProjectileInfo()
                         {
                             owner = self.gameObject,
-                            damage = self.baseDamage * (2f + (.5f * (inventoryCount - 1))),
+                            damage = self.baseDamage * CalculateChange(2f, .5f, inventoryCount),
                             position = self.corePosition,
                             rotation = Util.QuaternionSafeLookRotation(self.inputBank.aimDirection),
                             crit = false,
@@ -263,7 +263,6 @@ namespace PlugInChipsMod.Scripts
             ActiveBuff1 = buffs[rnd.Next(0, 5)];
             ActiveBuff2 = buffs[rnd.Next(0, 5)];
             while (ActiveBuff2 == ActiveBuff1) { ActiveBuff2 = buffs[rnd.Next(0, 5)]; }
-            PlugInChips.instance.Logger.LogMessage("buffs selected: " + ActiveBuff1.name + ", " + ActiveBuff2.name);
         }
     }
 }

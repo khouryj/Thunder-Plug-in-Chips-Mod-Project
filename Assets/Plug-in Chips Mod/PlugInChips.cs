@@ -25,13 +25,14 @@ namespace PlugInChipsMod
     {
         /*
         Big thanks to KomradeSpectre for the item creation tutorial, I would be lost without it.
-        Also for the ItemBase and EquipmentBase classes as I pretty much used those for the CustomItem and CustomEquipment abstracts
+        Also for the ItemBase and EquipmentBase classes as I pretty much used those for the CustomItem and CustomEquipment abstracts as well as the targeting component
         Thanks to bubbet for the help too with this project and for the code on custom void items
         Thanks to the modding community in general for being a big help.
         */
         public const string MODNAME = "Plug-In Chips Mod";
         public const string MODVERSION = "1.0.0";
         public const string MODGUID = "com.RumblingJOSEPH.PlugInChipsMod";
+        public const string PREFIX = "PLUGINCHIPS_";
 
         public static AssetBundle assetBundle = null;
         public static SerializableContentPack serializeableContentPack = null;
@@ -39,7 +40,6 @@ namespace PlugInChipsMod
 
         private bool load = true;
         public static PlugInChips instance;
-        public ConfigEntry<string> CurrentModVer;
 
         public static Dictionary<string, string> ShaderLookup = new Dictionary<string, string>()
     {
@@ -60,26 +60,34 @@ namespace PlugInChipsMod
 
             LoadAssetBundle();
             if (!load) { Logger.LogMessage("Failed to load in assetbundle, check file name/path."); return; }
-            
-            CurrentModVer = Config.Bind<string>("MOD VERSION: " + MODVERSION, "Mod Version Number", "0.0.0", "Utility used to reset configs when needed, DO NOT CHANGE!");
-            if (CurrentModVer.Value == "0.0.0")
-            {
-                ResetConfig();
-            }
 
             Projectiles.Init();
             Buffs.Init();
             PlugInChipsMod.Scripts.Utilities.Init();
+            AddDeveloperPrefix();
 
             ContentPackProvider.Init(); //i hecking love content packs
             ChipsItem.InitializeItems();
             ChipsEquipment.InitializeEquipment();
         }
 
-        private void ResetConfig()
+        //on the off chance someone makes an item with the exact same token
+        private void AddDeveloperPrefix()
         {
-            Config.Clear();
-            CurrentModVer.Value = MODVERSION;
+            foreach(ItemDef item in serializeableContentPack.itemDefs)
+            {
+                item.nameToken = PREFIX + item.nameToken;
+                item.pickupToken = PREFIX + item.pickupToken;
+                item.descriptionToken = PREFIX + item.descriptionToken;
+                item.loreToken = PREFIX + item.loreToken;
+            }
+            foreach(EquipmentDef equipmentDef in serializeableContentPack.equipmentDefs)
+            {
+                equipmentDef.nameToken = PREFIX + equipmentDef.nameToken;
+                equipmentDef.pickupToken = PREFIX + equipmentDef.pickupToken;
+                equipmentDef.descriptionToken = PREFIX + equipmentDef.descriptionToken;
+                equipmentDef.loreToken = PREFIX + equipmentDef.loreToken;
+            }
         }
 
         private void LoadAssetBundle()

@@ -11,16 +11,18 @@ namespace PlugInChipsMod.Scripts
     //This is simply RoR2.Artifacts.DoppelgangerSpawnCard but without making the player team a target in the prespawnsetupcallback method and I gave them damageboost items
     public class DoppelgangerAllySpawnCard : CharacterSpawnCard
     {
+        public static DoppelgangerAllySpawnCard doppelgangerAllySpawnCard;
         private CharacterMaster cm;
         private Inventory inventory;
+        private bool effectOff;
 
-        public static DoppelgangerAllySpawnCard FromMaster(CharacterMaster characterMaster)
+        public static DoppelgangerAllySpawnCard FromMaster(CharacterMaster characterMaster, bool effectOff = true)
         {
             if (!characterMaster) { return null; }
             CharacterBody cb = characterMaster.GetBody();
             if (!cb) { return null; }
 
-            DoppelgangerAllySpawnCard doppelgangerAllySpawnCard = ScriptableObject.CreateInstance<DoppelgangerAllySpawnCard>();
+            doppelgangerAllySpawnCard = ScriptableObject.CreateInstance<DoppelgangerAllySpawnCard>();
             doppelgangerAllySpawnCard.hullSize = cb.hullClassification;
             doppelgangerAllySpawnCard.nodeGraphType = (cb.isFlying ? MapNodeGroup.GraphType.Air : MapNodeGroup.GraphType.Ground);
             doppelgangerAllySpawnCard.prefab = MasterCatalog.GetMasterPrefab(MasterCatalog.FindAiMasterIndexForBody(cb.bodyIndex));
@@ -29,6 +31,7 @@ namespace PlugInChipsMod.Scripts
             doppelgangerAllySpawnCard.cm = characterMaster;
             doppelgangerAllySpawnCard.cm.loadout.Copy(doppelgangerAllySpawnCard.runtimeLoadout);
             doppelgangerAllySpawnCard.inventory = characterMaster.inventory;
+            doppelgangerAllySpawnCard.effectOff = effectOff;
 
             return doppelgangerAllySpawnCard;
         }
@@ -49,8 +52,15 @@ namespace PlugInChipsMod.Scripts
                 {
                     action(characterMaster);
                 }
-                characterMaster.inventory.GiveItem(RoR2Content.Items.InvadingDoppelganger);
-                characterMaster.inventory.GiveItem(RoR2Content.Items.BoostDamage, 250);
+                if (!doppelgangerAllySpawnCard.effectOff)
+                {
+                    characterMaster.inventory.GiveItem(RoR2Content.Items.InvadingDoppelganger);
+                    characterMaster.inventory.GiveItem(RoR2Content.Items.BoostDamage, 250);
+                }
+                else
+                {
+                    characterMaster.inventory.GiveItem(RoR2Content.Items.BoostHp, 50);
+                }
             });
         }
     }

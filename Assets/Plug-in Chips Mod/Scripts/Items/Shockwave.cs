@@ -35,8 +35,8 @@ namespace PlugInChipsMod.Scripts
 
         protected override void SetupConfig(ConfigFile config)
         {
-            BaseDamage = config.Bind<float>("Item: " + Name, "Base Damage", 50f, "What percent of the character's base damage should the base shockwave damage be?");
-            BaseDamageIncrements = config.Bind<float>("Item: " + Name, "Base Damage Increments", 20f, "How much should the percentage increase per stack?");
+            BaseDamage = config.Bind<float>("Item: " + Name, "Base Damage", 100f, "What percent of the character's base damage should the base shockwave damage be?");
+            BaseDamageIncrements = config.Bind<float>("Item: " + Name, "Base Damage Increments", 50f, "How much should the percentage increase per stack?");
         }
 
         protected override void SetupHooks()

@@ -15,7 +15,7 @@ MonoBehaviour:
   <buffIndex>k__BackingField: -1
   iconPath: Textures/ItemIcons/texNullIcon
   iconSprite: {fileID: 21300000, guid: 43c6ac4ba11eb9848b85f9d9ec683b43, type: 3}
-  buffColor: {r: 1, g: 1, b: 1, a: 1}
+  buffColor: {r: 0.38679248, g: 0.28097188, b: 0.28097188, a: 1}
   canStack: 1
   eliteDef: {fileID: 0}
   isDebuff: 1

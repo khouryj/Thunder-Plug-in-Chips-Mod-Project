@@ -19,6 +19,8 @@ namespace PlugInChipsMod.Scripts
         public static ItemDef VirtuousContract;
         public static ItemDef VirtuousTreaty;
 
+        public static EquipmentDef YorhaVisor;
+
         public static BuffDef SuperTaunt;
         public static BuffDef SuperDeadlyHeal;
         public static BuffDef SuperOffensiveHeal;
@@ -40,6 +42,8 @@ namespace PlugInChipsMod.Scripts
             VirtuousContract = serializeableContentPack.itemDefs[7];
             VirtuousTreaty = serializeableContentPack.itemDefs[8];
 
+            YorhaVisor = serializeableContentPack.equipmentDefs[2];
+
             Taunted = serializeableContentPack.buffDefs[2];
             SuperTaunt = serializeableContentPack.buffDefs[5];
             SuperDeadlyHeal = serializeableContentPack.buffDefs[6];
@@ -56,6 +60,22 @@ namespace PlugInChipsMod.Scripts
         {
             ItemCatalog.itemRelationships[DLC1Content.ItemRelationshipTypes.ContagiousItem] = ItemCatalog.itemRelationships[DLC1Content.ItemRelationshipTypes.ContagiousItem].AddRangeToArray(pairs);
 
+        }
+        //Checks validity of a gameobject in preparation to acquire CharacterBody/use inventory
+        public static bool CheckObject(GameObject gameObject)
+        {
+            if (!gameObject) { return false; }
+            return gameObject.GetComponent<CharacterBody>() && gameObject.GetComponent<CharacterBody>().inventory;
+        }
+        //Returns characterbody of gameobject or null if not valid
+        public static CharacterBody GetCharacterBody(this GameObject gameObject)
+        {
+            return CheckObject(gameObject) ? gameObject.GetComponent<CharacterBody>() : null;
+        }
+
+        public static float CalculateChange(float baseIncrease, float stackIncrease, int itemCount)
+        {
+            return baseIncrease + (stackIncrease * (itemCount-1));
         }
     }
 }

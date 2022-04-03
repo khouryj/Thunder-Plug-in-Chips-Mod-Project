@@ -21,7 +21,7 @@ namespace PlugInChipsMod.Scripts
 
         public override void Init(ConfigFile config)
         {
-            base.itemDef = serializeableContentPack.itemDefs[2];
+            itemDef = serializeableContentPack.itemDefs[2];
 
             SetupConfig(config);
             SetupLanguage();

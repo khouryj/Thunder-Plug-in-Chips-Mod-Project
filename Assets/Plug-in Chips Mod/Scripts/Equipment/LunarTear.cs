@@ -16,14 +16,22 @@ namespace PlugInChipsMod.Scripts
         public BuffDef Inspired;
         public BuffDef Weakened;
 
+        public ConfigEntry<bool> effectOff;
+
         public override void Init(ConfigFile config)
         {
-            base.equipmentDef = serializeableContentPack.equipmentDefs[1];
+            equipmentDef = serializeableContentPack.equipmentDefs[1];
             Inspired = serializeableContentPack.buffDefs[0];
             Weakened = serializeableContentPack.buffDefs[3];
 
+            SetupConfig(config);
             SetupLanguage();
             SetupHooks();
+        }
+
+        protected override void SetupConfig(ConfigFile config)
+        {
+            effectOff = config.Bind("Equipment: " + Name, "Doppelganger Effect Off?", true, "Should the doppelganger character and screen effects be turned off?");
         }
 
         protected override void SetupHooks()
@@ -75,13 +83,13 @@ namespace PlugInChipsMod.Scripts
                 double rnd = new System.Random().NextDouble();
                 if (rnd <= .7)
                 {
-                    DoppelgangerAllySpawnCard spawnCard = DoppelgangerAllySpawnCard.FromMaster(slot.characterBody.master);
+                    DoppelgangerAllySpawnCard spawnCard = DoppelgangerAllySpawnCard.FromMaster(slot.characterBody.master, effectOff.Value);
                     if (spawnCard)
                     {
                         SpawnCard.SpawnResult spawnResult = new SpawnCard.SpawnResult();
                         DirectorPlacementRule dpr = new DirectorPlacementRule();
                         DirectorSpawnRequest request = new DirectorSpawnRequest(spawnCard, dpr, new Xoroshiro128Plus((ulong)slot.characterBody.healthComponent.health));
-                        request.teamIndexOverride = TeamIndex.Player;
+                        request.teamIndexOverride = slot.characterBody.teamComponent.teamIndex;
                         request.summonerBodyObject = slot.characterBody.gameObject;
                         spawnCard.Spawn(slot.characterBody.corePosition, slot.characterBody.transform.localRotation, request, ref spawnResult);
                     }

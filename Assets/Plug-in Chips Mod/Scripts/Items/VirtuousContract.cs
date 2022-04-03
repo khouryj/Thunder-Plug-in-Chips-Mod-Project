@@ -11,7 +11,7 @@ namespace PlugInChipsMod.Scripts
     {
         public override string Name => "Virtuous Contract";
         public override string Pickup => "Deal more damage while at full health";
-        public override string Desc => $"Deal {VirtuousBaseDamage.Value}% more damage when you are at full health.";
+        public override string Desc => $"Deal <style=cIsDamage>{VirtuousBaseDamage.Value}%</style> more damage when you are at <style=cIsHealing>full health</style>.";
         public override string Lore => "";
 
         public ConfigEntry<float> VirtuousBaseDamage, VirtuousDamageIncrease;
@@ -49,7 +49,6 @@ namespace PlugInChipsMod.Scripts
                 if (cb.inventory.GetItemCount(itemDef) > 0 && cb.healthComponent?.health >= cb.healthComponent?.fullHealth)
                 {
                     damageInfo.damage *= (1 + (damage + (increments * (cb.inventory.GetItemCount(itemDef) - 1))));
-                    PlugInChips.instance.Logger.LogMessage("Damage applied");
                 }
             }
             orig(self, damageInfo);
