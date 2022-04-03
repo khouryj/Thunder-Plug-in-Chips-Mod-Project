@@ -36,24 +36,9 @@ namespace PlugInChipsMod.Scripts
 
         protected override void SetupHooks()
         {
-            //On.RoR2.Inventory.HandleInventoryChanged += AddYorhaComponent;
-            base.SetupHooks();
             On.RoR2.EquipmentSlot.PerformEquipmentAction += CheckEquipment;
             On.RoR2.HealthComponent.TakeDamage += SwitchBack;
-            Inventory.onInventoryChangedGlobal += AddYorhaComponent;
-        }
-        //I suppose this should be called removeyorhacomponent now but im too lazy; removes the component if you aren't transformed and you dont have the equipment anymore
-        private void AddYorhaComponent(Inventory self)
-        {
-            YorhaVisorComponent yvc;
-            if (!self || !self.GetComponent<CharacterMaster>()) { return; }
-            CharacterMaster cm = self.GetComponent<CharacterMaster>();
-            if (!cm.GetBody()) { return; }
-            if (cm.GetBody().equipmentSlot.equipmentIndex != equipmentDef.equipmentIndex && cm.gameObject.TryGetComponent<YorhaVisorComponent>(out yvc))
-            {
-                if (!yvc || yvc.transformed) { return; }
-                Object.Destroy(yvc);
-            }
+            base.SetupHooks();
         }
         //Swaps back to original character on low health, but does not save you from death
         private void SwitchBack(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
@@ -63,7 +48,7 @@ namespace PlugInChipsMod.Scripts
             if (self.health <= 0) { return; }
             if (self.isHealthLow)
             {
-                var component = self.body.master.GetComponent<YorhaVisorComponent>();
+                var component = self.body.master.gameObject.GetComponent<YorhaVisorComponent>();
                 if (component && component.transformed) { component.RevertCharacter(); }
             }
         }
@@ -72,7 +57,6 @@ namespace PlugInChipsMod.Scripts
         {
             if (equipmentDef == this.equipmentDef) 
             { 
-                if (self.characterBody.master && !self.characterBody.master.GetComponent<YorhaVisorComponent>()) { self.characterBody.master.gameObject.AddComponent<YorhaVisorComponent>(); }
                 return UseEquipment(self); 
             }
             return orig(self, equipmentDef);
@@ -81,7 +65,13 @@ namespace PlugInChipsMod.Scripts
         private bool UseEquipment(EquipmentSlot slot)
         {
             if (!slot.characterBody || !slot.characterBody.inputBank) { return false; }
-            var component = slot.characterBody.master.GetComponent<YorhaVisorComponent>();
+            if (!slot.characterBody.master) { return false; }
+            var component = slot.characterBody.master.gameObject.GetComponent<YorhaVisorComponent>();
+            if (!component)
+            {
+                slot.characterBody.master.gameObject.AddComponent<YorhaVisorComponent>();
+                component = slot.characterBody.master.gameObject.GetComponent<YorhaVisorComponent>();
+            }
             if (slot.stock <= 0 || !component) { return false; }
             if (component.transformed) { return false; }
 

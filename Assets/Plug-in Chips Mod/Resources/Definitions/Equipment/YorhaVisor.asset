@@ -23,7 +23,7 @@ MonoBehaviour:
   pickupIconSprite: {fileID: 21300000, guid: 4a6c45b6eb5325541a5252e760342182, type: 3}
   unlockableDef: {fileID: 0}
   colorIndex: 5
-  canDrop: 0
+  canDrop: 1
   dropOnDeathChance: 0
   canBeRandomlyTriggered: 1
   enigmaCompatible: 0

@@ -43,6 +43,11 @@ namespace PlugInChipsMod.Scripts
         //No joke, this hook works for real this time
         private void HealthComponent_TakeDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
         {
+            if (!damageInfo?.attacker || !self)
+            {
+                orig(self, damageInfo);
+                return;
+            }
             CharacterBody cb = damageInfo?.attacker?.GetComponent<CharacterBody>();
             if (cb && cb.inventory)
             {
