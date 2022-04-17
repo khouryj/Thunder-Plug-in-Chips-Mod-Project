@@ -22,21 +22,11 @@ namespace PlugInChipsMod.Scripts
         public override bool dlcRequired => true;
         //ItemDef.Pair array used to add void conversions to the dictionary in the base game
         private static ItemDef.Pair[] conversions;
-        //variables used for handling buffs
-        private static BuffDef ActiveBuff1, ActiveBuff2;
-        private static BuffDef[] buffs;
-        private static System.Random rnd = new System.Random();
-        private float cooldownTime, buffTime;
-
+        internal static Dictionary<GameObject, OSChipComponent> objectsWithComponent;
 
         public override void Init(ConfigFile config)
         {
             itemDef = osChip;
-            cooldownTime = 15f;
-            buffTime = 30f;
-            ActiveBuff1 = null;
-            ActiveBuff2 = null;
-            buffs = new BuffDef[] { SuperAntiChain, SuperDeadlyHeal, SuperOffensiveHeal, SuperShockwave, SuperTaunt };
 
             SetupLanguage();
             SetupHooks();
@@ -52,8 +42,13 @@ namespace PlugInChipsMod.Scripts
             Stage.onStageStartGlobal += RestartBuff;
             On.RoR2.CharacterBody.OnInventoryChanged += Detect;
             On.RoR2.CharacterBody.OnBuffFinalStackLost += CycleBuffs;
-            Run.onRunStartGlobal += Reset;
             On.RoR2.Items.ContagiousItemManager.Init += InitCorrupted;
+            Run.onRunStartGlobal += ResetDictionary;
+        }
+
+        private void ResetDictionary(Run obj)
+        {
+            objectsWithComponent = new Dictionary<GameObject, OSChipComponent>();
         }
 
         private void InitCorrupted(On.RoR2.Items.ContagiousItemManager.orig_Init orig)
@@ -89,30 +84,23 @@ namespace PlugInChipsMod.Scripts
             orig();
         }
 
-        //Resets buff values to default at the beginning of every run to avoid bugs
-        private void Reset(Run obj)
-        {
-            ActiveBuff1 = null;
-            ActiveBuff2 = null;
-            cooldownTime = 15f;
-            buffTime = 30f;
-        }
         //Hook on buff lost to add the new buffs
         private void CycleBuffs(On.RoR2.CharacterBody.orig_OnBuffFinalStackLost orig, CharacterBody self, BuffDef buffDef)
         {
             if (self && buffDef)
             {
-                if (buffDef == cooldown)
+                bool exists = objectsWithComponent.TryGetValue(self.masterObject, out OSChipComponent component);
+                if (exists && component)
                 {
-                    GetCurrentBuffs();
-                    self.AddTimedBuff(ActiveBuff1, buffTime);
-                    self.AddTimedBuff(ActiveBuff2, buffTime);
-                }
-                else if (buffDef == ActiveBuff1 || buffDef == ActiveBuff2)
-                {
-                    self.AddTimedBuff(cooldown, cooldownTime);
-                    ActiveBuff1 = null;
-                    ActiveBuff2 = null;
+                    if (buffDef == cooldown)
+                    {
+                        component.GetCurrentBuffs();
+                        component.HandleBuffs(false);
+                    }
+                    else if (buffDef == component.ActiveBuff1 || buffDef == component.ActiveBuff2)
+                    {
+                        component.HandleBuffs(true);
+                    }
                 }
             }
             orig(self, buffDef);
@@ -120,29 +108,36 @@ namespace PlugInChipsMod.Scripts
         //Hook to add the buff the first time character acquires the item in the run
         private void Detect(On.RoR2.CharacterBody.orig_OnInventoryChanged orig, CharacterBody self)
         {
+            orig(self);
             if (self)
             {
-                if (self.inventory.GetItemCount(itemDef) >= 1 && ActiveBuff1 == null && ActiveBuff2 == null && !self.HasBuff(cooldown))
+                bool exists = objectsWithComponent.TryGetValue(self.masterObject, out OSChipComponent component);
+                if (self.inventory.GetItemCount(osChip) > 0)
                 {
-                    GetCurrentBuffs();
-                    self.AddTimedBuff(ActiveBuff1, buffTime);
-                    self.AddTimedBuff(ActiveBuff2, buffTime);
+                    if (exists)
+                    {
+                        return;
+                    }
+                    objectsWithComponent.Add(self.masterObject, self.masterObject.AddComponent<OSChipComponent>());
+                    objectsWithComponent[self.masterObject].InitializeComponent(self.master);
+                }
+                else
+                {
+                    if (exists && component)
+                    {
+                        UnityEngine.Object.Destroy(component);
+                    }
                 }
             }
-            orig(self);
         }
         //Gives the local player the buffs at the beginning of each stage
         private void RestartBuff(Stage obj)
         {
-            ActiveBuff1 = null;
-            ActiveBuff2 = null;
-            CharacterBody cb = PlayerCharacterMasterController.instances[0].body;
-            if (cb && cb.inventory.GetItemCount(itemDef) > 0)
+            bool exists = objectsWithComponent.TryGetValue(CharacterMaster.readOnlyInstancesList[0].gameObject, out OSChipComponent component);
+            if (exists && component)
             {
-                GetCurrentBuffs();
-                cb.AddTimedBuff(ActiveBuff1, buffTime);
-                cb.AddTimedBuff(ActiveBuff2, buffTime);
-                return;
+                component.GetCurrentBuffs();
+                component.HandleBuffs(false);
             }
         }
 
@@ -257,12 +252,54 @@ namespace PlugInChipsMod.Scripts
                 }
             }
         }
+    }
+
+    public class OSChipComponent : MonoBehaviour
+    {
+        public CharacterMaster characterMaster;
+        public BuffDef ActiveBuff1 = null, ActiveBuff2 = null;
+        public static BuffDef[] buffs = new BuffDef[] {SuperTaunt, SuperShockwave, SuperOffensiveHeal, SuperDeadlyHeal, SuperAntiChain};
+        public static System.Random rnd = new System.Random();
+        private float cooldownTime, buffTime;
+
+        private void Awake()
+        {
+            cooldownTime = 15f;
+            buffTime = 30f;
+        }
+
+        private void OnDestroy()
+        {
+            OSChip.objectsWithComponent.Remove(this.gameObject);
+        }
+
         //Randomly acquires two different buffs
-        private static void GetCurrentBuffs()
+        public void GetCurrentBuffs()
         {
             ActiveBuff1 = buffs[rnd.Next(0, 5)];
             ActiveBuff2 = buffs[rnd.Next(0, 5)];
             while (ActiveBuff2 == ActiveBuff1) { ActiveBuff2 = buffs[rnd.Next(0, 5)]; }
+        }
+
+        public void HandleBuffs(bool isCooldown)
+        {
+            if (isCooldown)
+            {
+                characterMaster.GetBody().AddTimedBuff(cooldown, cooldownTime);
+                ActiveBuff1 = null;
+                ActiveBuff2 = null;
+                return;
+            }
+            characterMaster.GetBody().AddTimedBuff(ActiveBuff1, buffTime);
+            characterMaster.GetBody().AddTimedBuff(ActiveBuff2, buffTime);
+
+        }
+
+        public void InitializeComponent(CharacterMaster characterMaster)
+        {
+            this.characterMaster = characterMaster;
+            GetCurrentBuffs();
+            HandleBuffs(false);
         }
     }
 }

@@ -32,6 +32,7 @@ namespace PlugInChipsMod.Scripts
         public virtual bool usetargeting { get; } = false;
 
         public EquipmentDef equipmentDef;
+        public static List<CustomEquipment> equipment = new List<CustomEquipment>();
 
         public ConfigEntry<bool> enabled;
 
@@ -41,10 +42,7 @@ namespace PlugInChipsMod.Scripts
 
         protected virtual void SetupLanguage()
         {
-            LanguageAPI.Add(equipmentDef.nameToken, Name);
-            LanguageAPI.Add(equipmentDef.pickupToken, Pickup);
-            LanguageAPI.Add(equipmentDef.descriptionToken, Desc);
-            LanguageAPI.Add(equipmentDef.loreToken, Lore);
+            //Unused
         }
 
         protected virtual void SetupHooks()
@@ -61,6 +59,7 @@ namespace PlugInChipsMod.Scripts
                 Enabled(ref equip);
                 if (!equip.enabled.Value) { continue; }
                 equip.Init(PlugInChips.instance.Config);
+                CustomEquipment.equipment.Add(equip);
             }
         }
 

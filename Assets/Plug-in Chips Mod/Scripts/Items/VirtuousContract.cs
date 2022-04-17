@@ -12,7 +12,7 @@ namespace PlugInChipsMod.Scripts
         public override string Name => "Virtuous Contract";
         public override string Pickup => "Deal more damage while at full health";
         public override string Desc => $"Deal <style=cIsDamage>{VirtuousBaseDamage.Value}%</style> more damage when you are at <style=cIsHealing>full health</style>.";
-        public override string Lore => "";
+        public override string Lore => "\"These are my memories. Take care of everyone...take care of the future.\" -2B";
 
         public ConfigEntry<float> VirtuousBaseDamage, VirtuousDamageIncrease;
         private float damage, increments;

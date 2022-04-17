@@ -35,6 +35,7 @@ namespace PlugInChipsMod.Scripts
         public ConfigEntry<bool> aiBlacklist;
 
         public ItemDef itemDef;
+        public static List<CustomItem> items = new List<CustomItem>();
 
         public abstract void Init(ConfigFile config);
 
@@ -42,10 +43,7 @@ namespace PlugInChipsMod.Scripts
 
         protected virtual void SetupLanguage()
         {
-            LanguageAPI.Add(itemDef.nameToken, Name);
-            LanguageAPI.Add(itemDef.pickupToken, Pickup);
-            LanguageAPI.Add(itemDef.descriptionToken, Desc);
-            LanguageAPI.Add(itemDef.loreToken, Lore);
+            //Unused
         }
 
         protected virtual void SetupHooks() { }
@@ -62,6 +60,7 @@ namespace PlugInChipsMod.Scripts
                 //PlugInChips.instance.Logger.LogMessage("Initializing Items...");
                 
                 chipsItem.Init(PlugInChips.instance.Config);
+                items.Add(chipsItem);
 
                 //From bubbet's itembase
                 if (chipsItem.dlcRequired)

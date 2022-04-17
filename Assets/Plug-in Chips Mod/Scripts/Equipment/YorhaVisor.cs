@@ -11,7 +11,7 @@ namespace PlugInChipsMod.Scripts
         public override string Name => "Yorha Visor";
         public override string Pickup => "Hack into your enemies and take control of them.";
         public override string Desc => "<style=cIsUtility>Hack an enemy</style>, becoming one of them for a time. Reaching <style=cDeath>critical health</style> in this state will respawn you as you originally were. Note: Can only hack one enemy at a time.";
-        public override string Lore => "";
+        public override string Lore => "\"It doesn't matter, none of this matters! But if nothing matters, why do I long for humans like this? Why do I desire the touch of something that no longer exists?\" -9S";
         //Signifies to the base that I want to use targeting
         public override bool usetargeting => true;
 
@@ -69,11 +69,15 @@ namespace PlugInChipsMod.Scripts
             var component = slot.characterBody.master.gameObject.GetComponent<YorhaVisorComponent>();
             if (!component)
             {
-                slot.characterBody.master.gameObject.AddComponent<YorhaVisorComponent>();
-                component = slot.characterBody.master.gameObject.GetComponent<YorhaVisorComponent>();
+                component = slot.characterBody.master.gameObject.AddComponent<YorhaVisorComponent>();
             }
             if (slot.stock <= 0 || !component) { return false; }
-            if (component.transformed) { return false; }
+            if (component.transformed)
+            {
+                component.RevertCharacter();
+                Utilities.YorhaVisor.cooldown = 130f;
+                return true;
+            }
 
             var targetcomponent = slot.GetComponent<TargetingControllerComponent>();
             if (!targetcomponent || !targetcomponent.TargetObject) { return false; }
@@ -81,6 +85,7 @@ namespace PlugInChipsMod.Scripts
             if (!chosenhurtbox) { return false; }
             
             component.SwapCharacters(chosenhurtbox);
+            Utilities.YorhaVisor.cooldown = 5f;
             return true;
         }
     }
@@ -110,7 +115,12 @@ namespace PlugInChipsMod.Scripts
                 characterMaster.bodyPrefab = BodyCatalog.FindBodyPrefab(BodyCatalog.GetBodyName(hurtBox.healthComponent.body.bodyIndex));
                 transformed = true;
                 characterMaster.Respawn(origCharacterBody.transform.position, origCharacterBody.transform.rotation);
-                
+                var component = characterMaster.gameObject.GetComponent<OSChipComponent>();
+                if (component)
+                {
+                    component.GetCurrentBuffs();
+                    component.HandleBuffs(false);
+                }
             }
         }
         //Reverts back to first characterbody when called
@@ -119,6 +129,12 @@ namespace PlugInChipsMod.Scripts
             this.transformed = false;
             characterMaster.bodyPrefab = BodyCatalog.FindBodyPrefab(origName);
             characterMaster.Respawn(characterMaster.GetBody().transform.position, characterMaster.GetBody().transform.rotation);
+            var component = characterMaster.gameObject.GetComponent<OSChipComponent>();
+            if (component)
+            {
+                component.GetCurrentBuffs();
+                component.HandleBuffs(false);
+            }
         }
     }
 }

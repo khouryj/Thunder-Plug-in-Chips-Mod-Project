@@ -13,8 +13,10 @@ using ChipsItem = PlugInChipsMod.Scripts.CustomItem;
 using ChipsEquipment = PlugInChipsMod.Scripts.CustomEquipment;
 using Path = System.IO.Path;
 using RoR2;
+using SearchableAttribute = HG.Reflection.SearchableAttribute;
 using BepInEx.Configuration;
 
+[assembly: SearchableAttribute.OptIn]
 namespace PlugInChipsMod
 {
     [BepInPlugin(MODGUID, MODNAME, MODVERSION)]
@@ -30,7 +32,7 @@ namespace PlugInChipsMod
         Thanks to the modding community in general for being a big help.
         */
         public const string MODNAME = "Plug-In Chips Mod";
-        public const string MODVERSION = "1.0.0";
+        public const string MODVERSION = "1.1.0";
         public const string MODGUID = "com.RumblingJOSEPH.PlugInChipsMod";
         public const string PREFIX = "PLUGINCHIPS_";
 
@@ -42,14 +44,14 @@ namespace PlugInChipsMod
         public static PlugInChips instance;
 
         public static Dictionary<string, string> ShaderLookup = new Dictionary<string, string>()
-    {
+        {
             {"stubbed hopoo games/deferred/standard", "shaders/deferred/hgstandard"},
             {"stubbed hopoo games/fx/cloud intersection remap", "shaders/fx/hgintersectioncloudremap" },
             {"stubbed hopoo games/fx/cloud remap", "shaders/fx/hgcloudremap" },
             {"stubbed hopoo games/fx/distortion", "shaders/fx/hgdistortion" },
             {"stubbed hopoo games/deferred/snow topped", "shaders/deferred/hgsnowtopped" },
             {"stubbed hopoo games/fx/solid parallax", "shaders/fx/hgsolidparallax" }
-    };
+        };
 
         public BepInEx.Logging.ManualLogSource Logger;
 
@@ -69,6 +71,25 @@ namespace PlugInChipsMod
             ContentPackProvider.Init(); //i hecking love content packs
             ChipsItem.InitializeItems();
             ChipsEquipment.InitializeEquipment();
+        }
+
+        [SystemInitializer]
+        public static void SetupLanguage()
+        {
+            foreach(ChipsItem item in ChipsItem.items)
+            {
+                Language.english.SetStringByToken(item.itemDef.nameToken, item.Name);
+                Language.english.SetStringByToken(item.itemDef.pickupToken, item.Pickup);
+                Language.english.SetStringByToken(item.itemDef.descriptionToken, item.Desc);
+                Language.english.SetStringByToken(item.itemDef.loreToken, item.Lore);
+            }
+            foreach(ChipsEquipment equip in ChipsEquipment.equipment)
+            {
+                Language.english.SetStringByToken(equip.equipmentDef.nameToken, equip.Name);
+                Language.english.SetStringByToken(equip.equipmentDef.pickupToken, equip.Pickup);
+                Language.english.SetStringByToken(equip.equipmentDef.descriptionToken, equip.Desc);
+                Language.english.SetStringByToken(equip.equipmentDef.loreToken, equip.Lore);
+            }
         }
 
         //on the off chance someone makes an item with the exact same token

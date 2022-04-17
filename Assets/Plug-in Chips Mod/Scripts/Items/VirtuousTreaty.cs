@@ -11,8 +11,8 @@ namespace PlugInChipsMod.Scripts
     {
         public override string Name => "Virtuous Treaty";
         public override string Pickup => "Hit enemies to apply quickly-decaying stacks of logic virus. Full stacks damages enemies instantly.";
-        public override string Desc => "On hit, enemies will have a <style=cIsUtility>50% * Proc Coefficient</style> chance to gain 1 stack of <style=cDeath>logic virus</style>. Building up 25 stacks of logic virus will cause the enemy to <style=cIsUtility>short-circuit</style>, taking <style=cIsDamage>20%</style> <style=cStack>+10% per stack</style> of their current COMBINED health as damage. The enemy will lose all stacks of logic virus every <style=cIsUtility>8 seconds.</style>";
-        public override string Lore => "";
+        public override string Desc => "On hit, enemies will have a <style=cIsUtility>75% * Proc Coefficient</style> chance to gain 1 stack of <style=cDeath>logic virus</style>. Building up 25 stacks of logic virus will cause the enemy to <style=cIsUtility>short-circuit</style>, taking <style=cIsDamage>20%</style> <style=cStack>+10% per stack</style> of their current COMBINED health as damage. The enemy will lose all stacks of logic virus every <style=cIsUtility>8 seconds.</style>";
+        public override string Lore => "\"How many androids do you think you've killed? You think begging for your lives is going to help? You think that is going to make me forget everything!\" -A2";
 
         private BuffDef logicVirus;
 
@@ -38,7 +38,7 @@ namespace PlugInChipsMod.Scripts
             if (!cb || !victimBody) { return; }
             if (cb.inventory.GetItemCount(itemDef) > 0)
             {
-                if (Util.CheckRoll((.5f * damageInfo.procCoefficient) * 100, cb.master))
+                if (Util.CheckRoll((.75f * damageInfo.procCoefficient) * 100, cb.master))
                 {
                     victimBody.AddTimedBuff(logicVirus, 8, 25);
                 }
@@ -50,7 +50,7 @@ namespace PlugInChipsMod.Scripts
                     victimBody.healthComponent.TakeDamage(new DamageInfo { 
                         attacker = cb.gameObject, 
                         crit = false, 
-                        damage = Utilities.CalculateChange(.2f, .1f, cb.inventory.GetItemCount(itemDef)) * victimBody.healthComponent.combinedHealth, 
+                        damage = Utilities.CalculateChange(.2f, .1f, cb.inventory.GetItemCount(itemDef)) * victimBody.healthComponent.fullCombinedHealth, 
                         damageColorIndex = DamageColorIndex.Bleed,
                         force = Vector3.zero,
                         canRejectForce = false,

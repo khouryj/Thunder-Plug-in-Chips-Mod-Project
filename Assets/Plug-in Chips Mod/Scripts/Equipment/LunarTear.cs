@@ -16,6 +16,8 @@ namespace PlugInChipsMod.Scripts
         public BuffDef Inspired;
         public BuffDef Weakened;
 
+        private static string[] lines = new string[] { "Give up here?", "Is it all pointless?", "Do you admit there is no meaning to this world?" };
+
         public ConfigEntry<bool> effectOff;
 
         public override void Init(ConfigFile config)
@@ -47,7 +49,7 @@ namespace PlugInChipsMod.Scripts
                 var playerbody = damageReport.victim.body;
                 if (playerbody.equipmentSlot.equipmentIndex == base.equipmentDef.equipmentIndex)
                 {
-
+                    Chat.AddMessage("<style=cWorldEvent>???: " + lines[new Random().Next(0, 3)] + "</style>");
                     for (int index = CharacterMaster.readOnlyInstancesList.Count - 1; index >= 0; --index)
                     {
                         CharacterMaster readOnlyInstances = CharacterMaster.readOnlyInstancesList[index];
