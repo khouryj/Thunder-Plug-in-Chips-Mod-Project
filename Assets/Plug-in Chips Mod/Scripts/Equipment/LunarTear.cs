@@ -53,7 +53,7 @@ namespace PlugInChipsMod.Scripts
                     for (int index = CharacterMaster.readOnlyInstancesList.Count - 1; index >= 0; --index)
                     {
                         CharacterMaster readOnlyInstances = CharacterMaster.readOnlyInstancesList[index];
-                        if (readOnlyInstances.teamIndex == TeamIndex.Player && (bool)(UnityEngine.Object)readOnlyInstances.playerCharacterMasterController)
+                        if (readOnlyInstances.teamIndex == TeamIndex.Player && readOnlyInstances.playerCharacterMasterController)
                         {
                             CharacterBody body = readOnlyInstances.GetBody();
                             if (body)

@@ -22,7 +22,7 @@ namespace PlugInChipsMod
     [BepInPlugin(MODGUID, MODNAME, MODVERSION)]
     [BepInDependency(R2API.R2API.PluginGUID, R2API.R2API.PluginVersion)]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
-    [R2APISubmoduleDependency(nameof(LanguageAPI), nameof(PrefabAPI))]
+    [R2APISubmoduleDependency(nameof(PrefabAPI))]
     public class PlugInChips : BaseUnityPlugin
     {
         /*
@@ -32,7 +32,7 @@ namespace PlugInChipsMod
         Thanks to the modding community in general for being a big help.
         */
         public const string MODNAME = "Plug-In Chips Mod";
-        public const string MODVERSION = "1.1.0";
+        public const string MODVERSION = "1.1.1";
         public const string MODGUID = "com.RumblingJOSEPH.PlugInChipsMod";
         public const string PREFIX = "PLUGINCHIPS_";
 

@@ -44,14 +44,10 @@ namespace PlugInChipsMod.Scripts
         public override Action<CharacterMaster> GetPreSpawnSetupCallback()
         {
             Action<CharacterMaster> baseCallback = base.GetPreSpawnSetupCallback();
-            return (Action<CharacterMaster>)(characterMaster =>
+            return (characterMaster =>
             {
-                characterMaster.inventory.CopyItemsFrom(this.inventory, (Func<ItemIndex, bool>)(_ => true));
-                Action<CharacterMaster> action = baseCallback;
-                if (action != null)
-                {
-                    action(characterMaster);
-                }
+                characterMaster.inventory.CopyItemsFrom(inventory, _ => true);
+                baseCallback?.Invoke(characterMaster);
                 if (!doppelgangerAllySpawnCard.effectOff)
                 {
                     characterMaster.inventory.GiveItem(RoR2Content.Items.InvadingDoppelganger);
