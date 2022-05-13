@@ -109,7 +109,7 @@ namespace PlugInChipsMod.Scripts
         private void Detect(On.RoR2.CharacterBody.orig_OnInventoryChanged orig, CharacterBody self)
         {
             orig(self);
-            if (self)
+            if (self && self.master && self.inventory)
             {
                 bool exists = objectsWithComponent.TryGetValue(self.masterObject, out OSChipComponent component);
                 if (self.inventory.GetItemCount(osChip) > 0)

@@ -50,13 +50,13 @@ namespace PlugInChipsMod.Scripts
                 if (!damageReport.isFallDamage)
                 {
                     self.AddTimedBuffAuthority(RoR2Content.Buffs.Immune.buffIndex, BaseInvulnerabilityTime.Value);
-                    self.AddTimedBuff(hiddenCooldown, BaseInvulnerabilityTime.Value + 3f);
+                    self.AddTimedBuff(hiddenCooldown, BaseInvulnerabilityTime.Value + 6f);
                 }
             }
             else if (inventoryCount >= 2 && !damageReport.isFallDamage && !self.HasBuff(RoR2Content.Buffs.Immune) && !self.HasBuff(hiddenCooldown))
             {
                 self.AddTimedBuffAuthority(RoR2Content.Buffs.Immune.buffIndex, BaseInvulnerabilityTime.Value + (InvulnerabilityTimeIncrements.Value * inventoryCount) - InvulnerabilityTimeIncrements.Value);
-                self.AddTimedBuff(hiddenCooldown, BaseInvulnerabilityTime.Value + (InvulnerabilityTimeIncrements.Value * inventoryCount) - InvulnerabilityTimeIncrements.Value + 3f);
+                self.AddTimedBuff(hiddenCooldown, BaseInvulnerabilityTime.Value + (InvulnerabilityTimeIncrements.Value * inventoryCount) - InvulnerabilityTimeIncrements.Value + 6f);
             }
         }
     }

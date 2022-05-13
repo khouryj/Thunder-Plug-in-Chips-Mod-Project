@@ -7,17 +7,9 @@ Assets/PublicizedLib.meta
 Assets/Scenes.meta
 Assets/shaders.meta
 Assets/ThunderKitSettings.meta
-Assets/Plug-in Chips Mod*.meta
-Assets/Plug-in Chips Mod/Sus.asset
-Assets/Plug-in Chips Mod/Sus.asset.meta
-Assets/Plug-in Chips Mod/PlugInChipsMod.asmdef
-Assets/Plug-in Chips Mod/Stage.asset
-Assets/Plug-in Chips Mod/obj/*
-Assets/Plug-in Chips Mod/Temp/*
 Library/*
 Logs/*
 obj/*
 Packages/*
-ProjectSettings/*
 Temp/*
 ThunderKit/*

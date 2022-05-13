@@ -13,7 +13,8 @@
         "LegacyResourcesAPI.dll",
         "HGCSharpUtils.dll",
         "com.unity.multiplayer-hlapi.Runtime.dll",
-        "Unity.TextMeshPro.dll"
+        "Unity.TextMeshPro.dll",
+        "BetterUI.dll"
     ],
     "autoReferenced": false,
     "defineConstraints": [],

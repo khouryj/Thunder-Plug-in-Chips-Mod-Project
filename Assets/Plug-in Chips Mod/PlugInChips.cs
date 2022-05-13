@@ -32,7 +32,7 @@ namespace PlugInChipsMod
         Thanks to the modding community in general for being a big help.
         */
         public const string MODNAME = "Plug-In Chips Mod";
-        public const string MODVERSION = "1.1.1";
+        public const string MODVERSION = "1.1.2";
         public const string MODGUID = "com.RumblingJOSEPH.PlugInChipsMod";
         public const string PREFIX = "PLUGINCHIPS_";
 
